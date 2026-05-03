@@ -1,0 +1,26 @@
+[project]
+name = "classflow-titulacion"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flet>=0.84.0",
+    "google-auth>=2.50.0",
+    "google-auth-oauthlib>=1.3.1",
+    "requests>=2.33.1",
+]
+
+[project.scripts]
+
+#aqui definimos el comando corto
+#quitamos el src porque definimos "src" como la raiz
+
+app="main:main"
+
+[tool.uv]
+package = true
+
+#Esta secion es crucial para que python vea el ontenido de src como el nivel raiz 
+[tool.setuptools.package-dir]
+"" = "src"
