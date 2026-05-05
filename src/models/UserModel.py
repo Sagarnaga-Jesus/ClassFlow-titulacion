@@ -14,7 +14,7 @@ class UsuarioModel:
         
         conn= self.db.get_connection()
         cursor=conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM usuario WHERE email=%s",(usuario_data.email,))
+        cursor.execute("SELECT * FROM profesores WHERE correo=%s",(usuario_data.email,))
         user = cursor.fetchone()
         conn.close()
         
@@ -25,14 +25,12 @@ class UsuarioModel:
         cursor = conn.cursor()
         try:
             cursor.execute(
-                "INSERT INTO usuario (nombre, apellido, email, contraseña, telefono, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s)",
+                "INSERT INTO profesores (nombre, correo, password, telefono) VALUES (%s, %s, %s, %s)",
                 (
                     usuario_data.nombre,
-                    usuario_data.apellido,
                     usuario_data.email,
                     hashed_pw.decode('utf-8'),
-                    usuario_data.telefono,
-                    usuario_data.fecha
+                    usuario_data.telefono
                 )
             )
             conn.commit()
@@ -58,10 +56,10 @@ class UsuarioModel:
                 conn = self.db.get_connection()
                 cursor = conn.cursor()
             
-                cursor.execute(
+                """cursor.execute(
                     "UPDATE profesores SET ultimo_ingreso = NOW() WHERE id_profesor = %s",
                     (user["id_profesor"],)
-                )
+                )"""
                 
                 
             

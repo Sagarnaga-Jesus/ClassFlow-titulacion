@@ -1,0 +1,39 @@
+"""def login_google():
+        flow = InstalledAppFlow.from_client_secrets_file(
+            "src/client_secret_936016113208-e3k9m1dpclpiq3kndf4h92d31a78r9uk.apps.googleusercontent.com.json",
+            scopes=[
+                "openid",
+                "https://www.googleapis.com/auth/userinfo.email",
+                "https://www.googleapis.com/auth/userinfo.profile"
+            ]
+        )
+        creds = flow.run_local_server(port=0)
+        return creds
+
+    def get_user_info(creds):
+        r = requests.get(
+            "https://www.googleapis.com/oauth2/v1/userinfo",
+            headers={"Authorization": f"Bearer {creds.token}"}
+        )
+        return r.json()
+    
+    def login_google_click(e):
+        creds = login_google()
+        user_info = get_user_info(creds)
+    
+        # Aquí puedes guardar o verificar en tu BD
+        user = {
+            "nombre": user_info.get("name"),
+            "correo": user_info.get("email")
+        }
+    
+        page.user_data = user
+        page.go("/clases")"""
+
+    google_btn = ft.ElevatedButton(
+                                    "Iniciar sesión con Google",
+                                    icon=ft.Icons.LOGIN,
+                                    bgcolor=ft.Colors.RED_400,
+                                    color=ft.Colors.WHITE,
+                                    on_click=login_google_click
+                                    )

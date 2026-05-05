@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `profesores` (
   `nombre` varchar(50) NOT NULL DEFAULT '0',
   `correo` varchar(100) NOT NULL DEFAULT '0',
   `password` varchar(255) NOT NULL DEFAULT '0',
+  `telefono` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_profesor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 

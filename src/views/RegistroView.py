@@ -1,11 +1,7 @@
 import flet as ft
-#from views.RegistroView import RegistroView
 from datetime import datetime
-from google_auth_oauthlib.flow import InstalledAppFlow
-import requests
 
-
-def LoginView(page: ft.Page, auth_controller):
+def RegistroView(page: ft.Page, auth_controller):
     
     def ver_contra():
         contra.password = not contra.password
@@ -13,55 +9,53 @@ def LoginView(page: ft.Page, auth_controller):
         
     correo=(ft.TextField(label="Correo",autofocus=True, icon=ft.Icons.PERSON ))
     contra=(ft.TextField(label="Contraseña",suffix=ft.IconButton(icon=ft.Icons.VISIBILITY, on_click=ver_contra) ,password=True, autofocus=True, icon=ft.Icons.PASSWORD))
+    nombre=(ft.TextField(label="Nombre",icon=ft.Icons.BADGE))
+    telefono=(ft.TextField(label="Telefono",autofocus=True,icon=ft.Icons.CALL))
     
     
     
-    def login_click(e):
-        if not correo.value or not contra.value:
+    def registra(e):
+        if not correo.value and not contra.value and not nombre.value and not telefono.value :
             page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete todos los campos")))
             return
         
-    
-        user, msg = auth_controller.login(correo.value, contra.value)
-    
+        hoy = datetime.now()
+        fecha = hoy.strftime("%Y-%m-%d")
+        
+        user, msg = auth_controller.registrar_Usuario(nombre.value, correo.value, contra.value, telefono.value)
+        
         if user:
-            page.user_data = user
-            page.go("/clases")
+            page.go("/")
+            page.show_dialog(ft.SnackBar(ft.Text(msg)))
         else:
             page.show_dialog(ft.SnackBar(ft.Text(msg)))
-            
-    def olvidado():
-        page.show_dialog(ft.SnackBar(ft.Text("Se a enviado su contraseña al correo")))
     
-    def registro():
-        page.go("/registro")
-    
-    
-    iniciar=( ft.Button("Iniciar sesion",color=ft.Colors.WHITE ,bgcolor=ft.Colors.BLUE,on_click=login_click))
-    registrarse =( ft.TextButton("¿Quieres registrarte?", on_click=registro))
-    olvidada =( ft.TextButton("¿Olvidaste la contraseña?", on_click=olvidado))
-    
+    registrar =( ft.ElevatedButton("Registrase",color=ft.Colors.BLUE, on_click=registra))
+    def regresar():
+        page.go("/")
+        
+    reversa = ( ft.ElevatedButton("Regresar a login",color=ft.Colors.RED ,on_click=regresar))
     
     return ft.View(
-        route="/",
+        route="/registro",
         vertical_alignment=ft.MainAxisAlignment.CENTER, 
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         appbar=ft.AppBar(
-            title=ft.Text("Login"),
+            title=ft.Text("Registro"),
             bgcolor=ft.Colors.BLUE_GREY_900,
             color="white"
         ),
         controls=[
             ft.Column(
                 [
-                    ft.Icon(ft.Icons.LOCK_PERSON, size=50, color=ft.Colors.BLUE),
-                    ft.Text("Acceso al sistema", size=24, weight="bold"),
+                    ft.Icon(ft.Icons.ACCOUNT_BOX, size=50, color=ft.Colors.BLUE),
+                    ft.Text("Registro de usuario", size=30, weight="bold"),
+                    nombre,
+                    telefono,
                     correo,
                     contra,
-                    iniciar,
-                    #google_btn,
-                    registrarse,
-                    olvidada
+                    registrar,
+                    reversa
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=20,

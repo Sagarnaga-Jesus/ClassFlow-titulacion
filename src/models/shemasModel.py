@@ -13,11 +13,23 @@ class UsuarioBaseShema(BaseModel):
 class UsuarioShema(UsuarioBaseShema):
     email: EmailStr
     password: str= Field(min_length=8)
+    
+class ClaseSchema(BaseModel):
+    nombre: str = Field(min_length=1, max_length=100)
+    descripcion: Optional[str] = None
+    
+class UnidadSchema(BaseModel):
+    nombre: str = Field(min_length=1, max_length=100)
 
 class ActividadSchema(BaseModel):
-    titulo: str = Field(min_length=1, max_length=200)
+    nombre: str = Field(min_length=1, max_length=200)
     descripcion: Optional[str] = None
-    fecha_limite: Optional[date] = None
-    hora_limite: Optional[time] = None
-    prioridad: Optional[str] = "media"
-    clasificacion: Optional[str] = "personal"
+    tipo: Optional[str] = None
+    valor: Optional[float] = None
+    fecha_entrega: Optional[date] = None
+    fecha_agregada: Optional[time] = None
+
+class EvaluacionSchema(BaseModel):
+    calificacion: Optional[float] = None
+    autoevaluacion: Optional[float] = None
+    entregada: Optional[bool] = None

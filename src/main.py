@@ -1,7 +1,10 @@
 import flet as ft
 from views.LoginView import LoginView
 from views.ClasesView import ClasesView
+from views.RegistroView import RegistroView
+from views.UnidadesView import UnidadesView
 from controllers.UserController import AuthController
+
 
 def start(page: ft.Page):
     page.title = "Sistema SIGE"
@@ -18,6 +21,10 @@ def start(page: ft.Page):
             page.views.append(LoginView(page,auth))
         if page.route == "/clases":
             page.views.append(ClasesView(page,auth))
+        if page.route == "/unidades":
+            page.views.append(UnidadesView(page,auth))
+        if page.route == "/registro":
+            page.views.append(RegistroView(page,auth))
             
             #agregas aqui las vistas que necesites
         page.update()
