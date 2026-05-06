@@ -1,6 +1,52 @@
 import flet as ft
+from controllers.ApartadosController import UnidadesController
 
-def UnidadesView(page: ft.Page, auth_controller):
+def UnidadesView(page: ft.Page, auth_controller, id_clase):
+        
+    nombre = ft.TextField(label="Nombre de la unidad", icon=ft.Icons.TITLE)
+    lista_unidades = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
+    
+    def cargar_unidades():
+        if id_clase and 'id_clase' in id_clase:
+            lista_unidades.controls.clear()
+            unidades = UnidadesController().obtener_unidades(id_clase['id_clase'])
+    
+            for u in unidades:
+                lista_unidades.controls.append(
+                    ft.ElevatedButton(
+                        on_click="",
+                        content=ft.Container(
+                            padding=20,
+                            width=250,
+                            content=ft.Column([
+                                ft.Text(u["nombre"], size=18, weight="bold"),
+                            ])
+                        ),
+                        style=ft.ButtonStyle(
+                            shape=ft.RoundedRectangleBorder(radius=15),
+                            elevation=5
+                        )
+                    )
+                )
+    
+            page.update()
+    
+    cargar_unidades()
+    
+    def agregar():
+        if not nombre.value:
+            page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete el campo de nombre")))
+            return
+        
+        success, message = UnidadesController().agregar_unidad(id_clase, nombre.value)
+        page.show_dialog(ft.SnackBar(ft.Text(message)))
+        
+        if success:
+            nombre.value = ""
+            cargar_unidades()
+    
+    agregar_unidad = ft.Button("Agregar unidad", on_click=agregar)
+    
     return ft.View(
         route="/unidades",
         appbar=ft.AppBar(
@@ -14,6 +60,15 @@ def UnidadesView(page: ft.Page, auth_controller):
         ),
         
         controls=[
+            ft.Container(
+                padding=20,
+                content=ft.Column([
+                    ft.Text("Agregar nueva unidad", size=18, weight="bold"),
+                    nombre,
+                    agregar_unidad
+                ])
+            ),
             ft.Text("Aquí van las unidades de la clase seleccionada"),
+            lista_unidades
         ]
     )

@@ -1,5 +1,5 @@
 import flet as ft
-from controllers.ClasesController import ClasesController
+from controllers.ApartadosController import ClasesController
 
 def ClasesView(page, auth_controller):
     
@@ -8,10 +8,6 @@ def ClasesView(page, auth_controller):
     titulo = ft.TextField(label="Titulo de la clase", icon=ft.Icons.TITLE)
     descripcion = ft.TextField(label="Descripción de la clase", icon=ft.Icons.DESCRIPTION)
     lista_clases = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
-    
-    def unidades():
-        page.show_dialog(ft.SnackBar(ft.Text("Navegando a unidades...")))
-        page.go("/unidades")
     
     def agregar():
         if not titulo.value or not descripcion.value:
@@ -28,8 +24,9 @@ def ClasesView(page, auth_controller):
             cargar_clases()
             
     def unidades_click(id_clase):
+        page.go(f"/unidades/{id_clase}")
         
-        page.go("/unidades")
+    
     def cargar_clases():
         if user and 'id_profesor' in user:
             lista_clases.controls.clear()

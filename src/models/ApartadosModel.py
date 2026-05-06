@@ -27,3 +27,31 @@ class ClasesModel:
         )
         conn.commit()
         conn.close()
+
+class UnidadesModel:
+    def __init__(self):
+        self.db = Database()
+    
+    def obtener_unidades(self, id_clase):
+        conn = self.db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute("SELECT * FROM unidad WHERE id_clase = %s", (id_clase,))
+            unidades = cursor.fetchall()
+            return unidades
+        except Exception as e:
+            print(f"Error: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
+    
+    def agregar_unidad(self, id_clase, nombre):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO unidad (nombre, id_clase) VALUES (%s, %s)",
+            (nombre, id_clase)
+        )
+        conn.commit()
+        conn.close()

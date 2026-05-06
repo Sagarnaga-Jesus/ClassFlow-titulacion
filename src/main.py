@@ -22,7 +22,8 @@ def start(page: ft.Page):
         if page.route == "/clases":
             page.views.append(ClasesView(page,auth))
         if page.route == "/unidades":
-            page.views.append(UnidadesView(page,auth))
+            id_clase = page.route.split("/")[-1]
+            page.views.append(UnidadesView(page,auth, id_clase))
         if page.route == "/registro":
             page.views.append(RegistroView(page,auth))
             
