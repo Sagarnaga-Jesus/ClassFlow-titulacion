@@ -1,5 +1,5 @@
 import flet as ft
-from controllers.ApartadosController import ClasesController
+from controllers.ApartadosController import ClasesController, UnidadesController
 
 def ClasesView(page, auth_controller):
     
@@ -24,6 +24,7 @@ def ClasesView(page, auth_controller):
             cargar_clases()
             
     def unidades_click(id_clase):
+        UnidadesController(id_clase)
         page.go(f"/unidades/{id_clase}")
         
     

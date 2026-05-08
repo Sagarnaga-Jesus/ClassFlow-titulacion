@@ -14,10 +14,10 @@ def UnidadesView(page: ft.Page, auth_controller, id_clase):
             for u in unidades:
                 lista_unidades.controls.append(
                     ft.ElevatedButton(
-                        on_click="",
+                        on_click=cargar_unidades,
                         content=ft.Container(
                             padding=20,
-                            width=250,
+                            width=250, 
                             content=ft.Column([
                                 ft.Text(u["nombre"], size=18, weight="bold"),
                             ])
