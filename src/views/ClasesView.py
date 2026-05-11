@@ -1,7 +1,6 @@
 import flet as ft
-from controllers.ApartadosController import ClasesController, UnidadesController
 
-def ClasesView(page, auth_controller):
+def ClasesView(page, clases_controller, unidades_controller):
     
     user = getattr(page, "user_data", None)
     
@@ -14,7 +13,7 @@ def ClasesView(page, auth_controller):
             page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete todos los campos")))
             return
         
-        success, message = ClasesController().agregar_clase(user["id_profesor"], titulo.value, descripcion.value)
+        success, message = clases_controller.agregar_clase(user["id_profesor"], titulo.value, descripcion.value)
         
         page.show_dialog(ft.SnackBar(ft.Text(message)))
         
@@ -24,26 +23,26 @@ def ClasesView(page, auth_controller):
             cargar_clases()
             
     def unidades_click(id_clase):
-        UnidadesController(id_clase)
+        unidades_controller.obtener_unidades(id_clase)
         page.go(f"/unidades/{id_clase}")
         
     
     def cargar_clases():
         if user and 'id_profesor' in user:
             lista_clases.controls.clear()
-            clases = ClasesController().obtener_clases(user['id_profesor'])
+            clases = clases_controller.obtener_clases(user['id_profesor'])
     
             for c in clases:
                 lista_clases.controls.append(
                     ft.ElevatedButton(
-                        on_click=unidades_click(c["id_clase"]),
+                        on_click=lambda e, id_clase=c["id_clase"]: unidades_click(id_clase),
                         content=ft.Container(
                             padding=20,
-                            width=250,
+                            width=500,
                             content=ft.Column([
-                                ft.Text(c["nombre"], size=18, weight="bold"),
-                                ft.Text(c["descripcion"], size=14),
-                            ])
+                                ft.Text(c["nombre"], size=24, weight="bold"),
+                                ft.Text(c["descripcion"], size=20),
+                            ], alignment=ft.MainAxisAlignment.CENTER,)
                         ),
                         style=ft.ButtonStyle(
                             shape=ft.RoundedRectangleBorder(radius=15),

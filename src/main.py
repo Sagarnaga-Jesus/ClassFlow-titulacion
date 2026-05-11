@@ -4,15 +4,20 @@ from views.ClasesView import ClasesView
 from views.RegistroView import RegistroView
 from views.UnidadesView import UnidadesView
 from controllers.UserController import AuthController
+from controllers.ApartadosController import ClasesController, UnidadesController
 
 
 def start(page: ft.Page):
-    page.title = "Sistema SIGE"
+    page.title = "ClassFlow"
+    page.scroll = ft.ScrollMode.AUTO
+    page.theme_mode = ft.ThemeMode.LIGHT
     page.window_width = 450
     page.window_height = 700
     
-    # instanciar controladores ua sola
+    # instanciar controladores una sola
     auth = AuthController()
+    clases = ClasesController()
+    unidades = UnidadesController()
     
     def route_change(e):
         page.views.clear()
@@ -20,10 +25,10 @@ def start(page: ft.Page):
         if page.route == "/":
             page.views.append(LoginView(page,auth))
         if page.route == "/clases":
-            page.views.append(ClasesView(page,auth))
-        if page.route == "/unidades":
-            id_clase = page.route.split("/")[-1]
-            page.views.append(UnidadesView(page,auth, id_clase))
+            page.views.append(ClasesView(page, clases, unidades))
+        if page.route.startswith("/unidades"):
+            id_clase = page.route.split("/unidades/")[1]
+            page.views.append(UnidadesView(page, unidades, {"id_clase": id_clase}))
         if page.route == "/registro":
             page.views.append(RegistroView(page,auth))
             

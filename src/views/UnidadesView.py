@@ -1,7 +1,6 @@
 import flet as ft
-from controllers.ApartadosController import UnidadesController
 
-def UnidadesView(page: ft.Page, auth_controller, id_clase):
+def UnidadesView(page: ft.Page, unidades_controller, id_clase):
         
     nombre = ft.TextField(label="Nombre de la unidad", icon=ft.Icons.TITLE)
     lista_unidades = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
@@ -9,7 +8,7 @@ def UnidadesView(page: ft.Page, auth_controller, id_clase):
     def cargar_unidades():
         if id_clase and 'id_clase' in id_clase:
             lista_unidades.controls.clear()
-            unidades = UnidadesController().obtener_unidades(id_clase['id_clase'])
+            unidades = unidades_controller.obtener_unidades(id_clase['id_clase'])
     
             for u in unidades:
                 lista_unidades.controls.append(
@@ -38,7 +37,7 @@ def UnidadesView(page: ft.Page, auth_controller, id_clase):
             page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete el campo de nombre")))
             return
         
-        success, message = UnidadesController().agregar_unidad(id_clase, nombre.value)
+        success, message = unidades_controller.agregar_unidad(id_clase['id_clase'], nombre.value)
         page.show_dialog(ft.SnackBar(ft.Text(message)))
         
         if success:
@@ -54,6 +53,7 @@ def UnidadesView(page: ft.Page, auth_controller, id_clase):
             bgcolor=ft.Colors.BLUE_GREY_900,
             color="white",
             actions=[
+                ft.IconButton(ft.Icons.WEB_STORIES, on_click=lambda _: page.go("/clases")),
                     ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil")),
                     ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=lambda _: page.go("/"))
                 ],
