@@ -5,7 +5,7 @@ from views.RegistroView import RegistroView
 from views.UnidadesView import UnidadesView
 from controllers.UserController import AuthController
 from controllers.ApartadosController import ClasesController, UnidadesController
-
+from controllers.ParticipantesController import ParticipantesController
 
 def start(page: ft.Page):
     page.title = "ClassFlow"
@@ -18,14 +18,14 @@ def start(page: ft.Page):
     auth = AuthController()
     clases = ClasesController()
     unidades = UnidadesController()
-    
+    participantes = ParticipantesController()
     def route_change(e):
         page.views.clear()
         
         if page.route == "/":
             page.views.append(LoginView(page,auth))
         if page.route == "/clases":
-            page.views.append(ClasesView(page, clases, unidades))
+            page.views.append(ClasesView(page, clases, unidades, participantes))
         if page.route.startswith("/unidades"):
             id_clase = page.route.split("/unidades/")[1]
             page.views.append(UnidadesView(page, unidades, {"id_clase": id_clase}))

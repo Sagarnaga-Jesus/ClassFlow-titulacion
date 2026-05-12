@@ -1,6 +1,6 @@
 import flet as ft
 
-def ClasesView(page, clases_controller, unidades_controller):
+def ClasesView(page, clases_controller, unidades_controller, participantes_controller):
     
     user = getattr(page, "user_data", None)
     
@@ -54,6 +54,17 @@ def ClasesView(page, clases_controller, unidades_controller):
             page.update()
     
     cargar_clases()
+    
+    def participantes(id_clase):
+        participantes_controller.obtener(id_clase)
+    
+        lista_participantes = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
+        
+        for p in participantes:
+            lista_participantes.controls.append(
+                ft.Text(p["nombre"], size=18)
+            )
+        
     
     agregar_clase = ft.FloatingActionButton(icon=ft.Icons.ADD, on_click=agregar)
     
