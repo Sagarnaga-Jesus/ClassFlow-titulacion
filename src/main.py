@@ -3,6 +3,7 @@ from views.LoginView import LoginView
 from views.ClasesView import ClasesView
 from views.RegistroView import RegistroView
 from views.UnidadesView import UnidadesView
+from views.ParticipantesView import ParticipantesView
 from controllers.UserController import AuthController
 from controllers.ApartadosController import ClasesController, UnidadesController
 from controllers.ParticipantesController import ParticipantesController
@@ -25,10 +26,13 @@ def start(page: ft.Page):
         if page.route == "/":
             page.views.append(LoginView(page,auth))
         if page.route == "/clases":
-            page.views.append(ClasesView(page, clases, unidades, participantes))
+            page.views.append(ClasesView(page, clases, unidades))
         if page.route.startswith("/unidades"):
             id_clase = page.route.split("/unidades/")[1]
             page.views.append(UnidadesView(page, unidades, {"id_clase": id_clase}))
+        if page.route.startswith("/participantes"):
+            id_clase = page.route.split("/participantes/")[1]
+            page.views.append(ParticipantesView(page, participantes, {"id_clase": id_clase}))
         if page.route == "/registro":
             page.views.append(RegistroView(page,auth))
             

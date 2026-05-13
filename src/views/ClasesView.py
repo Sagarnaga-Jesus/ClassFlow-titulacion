@@ -1,6 +1,7 @@
 import flet as ft
+from controllers.ParticipantesController import ParticipantesController
 
-def ClasesView(page, clases_controller, unidades_controller, participantes_controller):
+def ClasesView(page, clases_controller, unidades_controller):
     
     user = getattr(page, "user_data", None)
     
@@ -23,7 +24,6 @@ def ClasesView(page, clases_controller, unidades_controller, participantes_contr
             cargar_clases()
             
     def unidades_click(id_clase):
-        unidades_controller.obtener_unidades(id_clase)
         page.go(f"/unidades/{id_clase}")
         
     
@@ -55,18 +55,7 @@ def ClasesView(page, clases_controller, unidades_controller, participantes_contr
     
     cargar_clases()
     
-    def participantes(id_clase):
-        participantes_controller.obtener(id_clase)
-    
-        lista_participantes = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
-        
-        for p in participantes:
-            lista_participantes.controls.append(
-                ft.Text(p["nombre"], size=18)
-            )
-        
-    
-    agregar_clase = ft.FloatingActionButton(icon=ft.Icons.ADD, on_click=agregar)
+    agregar_clase = ft.FloatingActionButton(icon=ft.Icons.ADD, on_click=agregar, tooltip="Agregar clase")
     
     return ft.View(
         route="/clases",
@@ -75,8 +64,8 @@ def ClasesView(page, clases_controller, unidades_controller, participantes_contr
             bgcolor=ft.Colors.BLUE_GREY_900,
             color="white",
             actions=[
-                    ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil")),
-                    ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=lambda _: page.go("/"))
+                    ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil", tooltip="Ver perfil")),
+                    ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=lambda _: page.go("/", tooltip="Cerrar sesión"))
                 ],
         ),
         
