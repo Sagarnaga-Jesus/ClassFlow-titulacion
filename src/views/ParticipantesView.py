@@ -4,7 +4,6 @@ def ParticipantesView(page, participantes_controller,id_clase):
     
     nombre_participante = ft.TextField(label="Nombre del participante", icon=ft.Icons.PERSON)
     correo_participante = ft.TextField(label="Correo electrónico", icon=ft.Icons.EMAIL)
-
     
     participantes = participantes_controller.obtener(id_clase["id_clase"])
     

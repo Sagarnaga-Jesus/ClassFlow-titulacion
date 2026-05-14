@@ -8,7 +8,6 @@ class ParticipantesModel:
     def obtener_participantes(self, id_clase):
 
         conn = Database().get_connection()
-
         cursor = conn.cursor(dictionary=True)
 
         cursor.execute("""
@@ -19,7 +18,6 @@ class ParticipantesModel:
         """, (id_clase,))
 
         participantes = cursor.fetchall()
-
         cursor.close()
         conn.close()
 
