@@ -14,7 +14,6 @@ def UnidadesView(page: ft.Page, unidades_controller, id_clase):
             for u in unidades:
                 lista_unidades.controls.append(
                     ft.ElevatedButton(
-                        on_click=cargar_unidades,
                         content=ft.Container(
                             padding=20,
                             width=250, 

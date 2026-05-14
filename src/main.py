@@ -25,15 +25,15 @@ def start(page: ft.Page):
         
         if page.route == "/":
             page.views.append(LoginView(page,auth))
-        if page.route == "/clases":
+        elif page.route == "/clases":
             page.views.append(ClasesView(page, clases, unidades))
-        if page.route.startswith("/unidades"):
+        elif page.route.startswith("/unidades"):
             id_clase = page.route.split("/unidades/")[1]
             page.views.append(UnidadesView(page, unidades, {"id_clase": id_clase}))
-        if page.route.startswith("/participantes"):
+        elif page.route.startswith("/participantes"):
             id_clase = page.route.split("/participantes/")[1]
             page.views.append(ParticipantesView(page, participantes, {"id_clase": id_clase}))
-        if page.route == "/registro":
+        elif page.route == "/registro":
             page.views.append(RegistroView(page,auth))
             
             #agregas aqui las vistas que necesites
