@@ -1,6 +1,6 @@
 import flet as ft
 
-def ParticipantesView(page,participantes_controller,clases_controller,id_clase):
+def ParticipantesView(page, participantes_controller):
 
     lista_participantes = ft.Column(
         scroll=ft.ScrollMode.ALWAYS,
@@ -11,13 +11,15 @@ def ParticipantesView(page,participantes_controller,clases_controller,id_clase):
 
         lista_participantes.controls.clear()
 
-        clase = clases_controller.obtener_clase(
-            id_clase["id_clase"]
-        )
+        clase = page.session.get("clase_actual")
+
+        if not clase:
+            page.show_snack_bar(ft.SnackBar(ft.Text("No hay clase seleccionada")))
+            return
 
         participantes = participantes_controller.obtener_google(
             page.user_data["creds"],
-            clase["id_google"]
+            clase["id"]   # 👈 Google Classroom ID
         )
 
         for p in participantes:
@@ -25,26 +27,16 @@ def ParticipantesView(page,participantes_controller,clases_controller,id_clase):
             perfil = p["profile"]
 
             lista_participantes.controls.append(
-
                 ft.Card(
                     content=ft.Container(
                         padding=15,
-
                         content=ft.Column([
-
                             ft.Text(
                                 perfil["name"]["fullName"],
                                 size=18,
                                 weight="bold"
                             ),
-
-                            ft.Text(
-                                perfil.get(
-                                    "emailAddress",
-                                    ""
-                                )
-                            )
-
+                            ft.Text(perfil.get("emailAddress", ""))
                         ])
                     )
                 )
@@ -56,37 +48,18 @@ def ParticipantesView(page,participantes_controller,clases_controller,id_clase):
 
     return ft.View(
         route="/participantes",
-
         appbar=ft.AppBar(
             title=ft.Text("Participantes"),
             bgcolor=ft.Colors.BLUE_GREY_900,
-            color="white",
-
             actions=[
-
                 ft.IconButton(
                     ft.Icons.ARROW_BACK,
-                    on_click=lambda _:
-                    page.go(
-                        f"/unidades/{id_clase['id_clase']}"
-                    )
-                ),
-
-                ft.IconButton(
-                    ft.Icons.WEB_STORIES,
-                    on_click=lambda _:
-                    page.go("/clases")
+                    on_click=lambda _: page.go("/unidades")
                 )
             ]
         ),
-
         controls=[
-            ft.Text(
-                "Participantes de la clase",
-                size=24,
-                weight="bold"
-            ),
-
+            ft.Text("Participantes de la clase", size=24, weight="bold"),
             lista_participantes
         ]
     )
