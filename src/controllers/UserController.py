@@ -6,6 +6,20 @@ class AuthController:
     def __init__(self):
         self.model = UsuarioModel()
         
+    def login_google(self, nombre, correo, foto):
+
+        user = self.model.buscar_por_correo(correo)
+    
+        if user:
+            return user, "Login correcto"
+        nuevo = self.model.crear_google(
+            nombre,
+            correo,
+            foto
+        )
+        return nuevo, "Usuario creado"
+        
+        
     def registrar_Usuario(self, nombre, email, contraseña, telefono):
         try:
             nuevo_usuario = UsuarioShema(
@@ -37,3 +51,29 @@ class AuthController:
     
         except ValidationError as e:
             return False, e.errors()[0]['msg']
+        
+    def existe(self, correo):
+        try:
+            user = self.model.existe_correo(correo)
+            
+            if user:
+                return True, "Existe correo"
+            else:
+                return False, "No existe"
+            
+        except ValidationError as e:
+            return False, e.errors()[0]['msg']
+    
+    def cambiar(self,password,correo):
+        try:
+            cambio = self.model.cambiar_password(password, correo)
+            
+            if cambio:
+                return True, "Contraseña cambiada exitosamente"
+            else:
+                return False, "Hubo problemas verifique"
+            
+        except ValidationError as e:
+            return False, e.errors()[0]['msg']
+    
+    

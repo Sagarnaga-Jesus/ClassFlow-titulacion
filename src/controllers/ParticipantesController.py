@@ -5,8 +5,6 @@ class ParticipantesController:
     def __init__(self):
         self.model = ParticipantesModel()
         
-    def obtener(self, id_clase):
-        return self.model.obtener_participantes(id_clase)
+    def obtener_google(self, creds, id_google):
+        return self.model.obtener_participantes(creds, id_google)
     
-    def agregar (self,nombre,correo,id_clase):
-        return self.model.agregar_participante(nombre,correo,id_clase)

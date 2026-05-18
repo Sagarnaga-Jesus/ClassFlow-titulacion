@@ -18,12 +18,12 @@ class ClasesModel:
             cursor.close()
             conn.close()
     
-    def agregar_clase(self, id_profesor, nombre, descripcion):
+    def agregar_clase(self, id_profesor, id_google, nombre, descripcion):
         conn = self.db.get_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO clase (nombre, descripcion, id_profesor) VALUES (%s, %s, %s)",
-            (nombre,descripcion,id_profesor)
+            "INSERT INTO clase (nombre, descripcion, id_profesor, id_google) VALUES (%s, %s, %s,%s)",
+            (nombre,descripcion,id_profesor,id_google)
         )
         conn.commit()
         conn.close()

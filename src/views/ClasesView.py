@@ -3,26 +3,63 @@ from controllers.ParticipantesController import ParticipantesController
 
 def ClasesView(page, clases_controller, unidades_controller):
     
-    user = getattr(page, "user_data", None)
+    data = page.user_data
+
+    user = data["usuario"]
+
+    clases = data["clases"]
+    clases = page.user_data["clases"]
     
-    titulo = ft.TextField(label="Titulo de la clase", icon=ft.Icons.TITLE)
-    descripcion = ft.TextField(label="Descripción de la clase", icon=ft.Icons.DESCRIPTION)
+    select_clases = ft.Dropdown(
+        label="Selecciona una clase de Classroom",
+        width=400,
+        options=[
+            ft.dropdown.Option(
+                key=c["id"],
+                text=c["name"]
+            )
+            for c in clases
+        ]
+    )
     lista_clases = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
     
-    def agregar():
-        if not titulo.value or not descripcion.value:
-            page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete todos los campos")))
+    def agregar(e):
+
+        if not select_clases.value:
+    
+            page.show_dialog(
+                ft.SnackBar(
+                    ft.Text("Selecciona una clase")
+                )
+            )
+    
             return
-        
-        success, message = clases_controller.agregar_clase(user["id_profesor"], titulo.value, descripcion.value)
-        
-        page.show_dialog(ft.SnackBar(ft.Text(message)))
-        
+    
+        clase = next(
+            (
+                c for c in clases
+                if c["id"] == select_clases.value
+            ),
+            None
+        )
+    
+        if not clase:
+            return
+    
+        success, message = clases_controller.agregar_clase(
+            user["id_profesor"],
+            clase["id"],
+            clase["name"],
+            clase.get("section", "")
+        )
+    
+        page.show_dialog(
+            ft.SnackBar(ft.Text(message))
+        )
+    
         if success:
-            titulo.value = ""
-            descripcion.value = ""
             cargar_clases()
-            
+    
     def unidades_click(id_clase):
         page.go(f"/unidades/{id_clase}")
         
@@ -71,7 +108,7 @@ def ClasesView(page, clases_controller, unidades_controller):
         
         controls=[
             ft.Container(
-                ft.Row([titulo, descripcion, agregar_clase], spacing=20),
+                ft.Row([select_clases,agregar_clase], spacing=20),
         ),
             ft.Divider(),
             lista_clases

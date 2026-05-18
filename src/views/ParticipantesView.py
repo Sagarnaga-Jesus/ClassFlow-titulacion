@@ -1,46 +1,92 @@
 import flet as ft
 
-def ParticipantesView(page, participantes_controller,id_clase):
-    
-    nombre_participante = ft.TextField(label="Nombre del participante", icon=ft.Icons.PERSON)
-    correo_participante = ft.TextField(label="Correo electrónico", icon=ft.Icons.EMAIL)
-    
-    participantes = participantes_controller.obtener(id_clase["id_clase"])
-    
-    lista_participantes = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
-    
-    for p in participantes:
-        lista_participantes.controls.append(
-            ft.Text(p["nombre"], size=18)
+def ParticipantesView(page,participantes_controller,clases_controller,id_clase):
+
+    lista_participantes = ft.Column(
+        scroll=ft.ScrollMode.ALWAYS,
+        expand=True
+    )
+
+    def cargar_participantes():
+
+        lista_participantes.controls.clear()
+
+        clase = clases_controller.obtener_clase(
+            id_clase["id_clase"]
         )
-    
-    def agregar_participante():
-        if not nombre_participante.value and not correo_participante.value:
-            page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete los campos de nombre y correo electrónico")))
-            return
-        
-        partipante = participantes_controller.agregar(nombre_participante.value, correo_participante.value, id_clase['id_clase'])
-        
-    
+
+        participantes = participantes_controller.obtener_google(
+            page.user_data["creds"],
+            clase["id_google"]
+        )
+
+        for p in participantes:
+
+            perfil = p["profile"]
+
+            lista_participantes.controls.append(
+
+                ft.Card(
+                    content=ft.Container(
+                        padding=15,
+
+                        content=ft.Column([
+
+                            ft.Text(
+                                perfil["name"]["fullName"],
+                                size=18,
+                                weight="bold"
+                            ),
+
+                            ft.Text(
+                                perfil.get(
+                                    "emailAddress",
+                                    ""
+                                )
+                            )
+
+                        ])
+                    )
+                )
+            )
+
+        page.update()
+
+    cargar_participantes()
+
     return ft.View(
         route="/participantes",
+
         appbar=ft.AppBar(
             title=ft.Text("Participantes"),
             bgcolor=ft.Colors.BLUE_GREY_900,
             color="white",
+
             actions=[
-                ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go(f"/unidades/{id_clase['id_clase']}"), tooltip="Volver a unidad"),
-                ft.IconButton(ft.Icons.WEB_STORIES, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
-                ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
+
+                ft.IconButton(
+                    ft.Icons.ARROW_BACK,
+                    on_click=lambda _:
+                    page.go(
+                        f"/unidades/{id_clase['id_clase']}"
+                    )
+                ),
+
+                ft.IconButton(
+                    ft.Icons.WEB_STORIES,
+                    on_click=lambda _:
+                    page.go("/clases")
+                )
             ]
         ),
-        
+
         controls=[
-            ft.Row([
-                nombre_participante,
-                correo_participante,
-                ft.IconButton(ft.Icons.ADD, on_click=agregar_participante, tooltip="Agregar participante")
-            ], alignment=ft.MainAxisAlignment.CENTER),
+            ft.Text(
+                "Participantes de la clase",
+                size=24,
+                weight="bold"
+            ),
+
             lista_participantes
         ]
     )

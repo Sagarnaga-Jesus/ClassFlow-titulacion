@@ -1,5 +1,6 @@
 import flet as ft
 from views.LoginView import LoginView
+from views.OlvidadoView import OlvidadoView
 from views.ClasesView import ClasesView
 from views.RegistroView import RegistroView
 from views.UnidadesView import UnidadesView
@@ -25,6 +26,8 @@ def start(page: ft.Page):
         
         if page.route == "/":
             page.views.append(LoginView(page,auth))
+        if page.route == "/olvidado":
+            page.views.append(OlvidadoView(page,auth))
         elif page.route == "/clases":
             page.views.append(ClasesView(page, clases, unidades))
         elif page.route.startswith("/unidades"):
@@ -32,7 +35,7 @@ def start(page: ft.Page):
             page.views.append(UnidadesView(page, unidades, {"id_clase": id_clase}))
         elif page.route.startswith("/participantes"):
             id_clase = page.route.split("/participantes/")[1]
-            page.views.append(ParticipantesView(page, participantes, {"id_clase": id_clase}))
+            page.views.append(ParticipantesView(page, participantes, clases ,{"id_clase": id_clase}))
         elif page.route == "/registro":
             page.views.append(RegistroView(page,auth))
             
