@@ -7,7 +7,6 @@ class ParticipantesController:
         self.model = ParticipantesModel()
         
     def obtener_google(self, creds, id_clase):
-        # Usar las credenciales del login
         service = build("classroom", "v1", credentials=creds)
 
         response = service.courses().students().list(courseId=id_clase).execute()

@@ -9,7 +9,6 @@ class AuthController:
     def login_google(self, nombre, correo, foto):
 
         user = self.model.buscar_por_correo(correo)
-    
         if user:
             return user, "Login correcto"
         nuevo = self.model.crear_google(
@@ -20,60 +19,4 @@ class AuthController:
         return nuevo, "Usuario creado"
         
         
-    def registrar_Usuario(self, nombre, email, contraseña, telefono):
-        try:
-            nuevo_usuario = UsuarioShema(
-                nombre=nombre,
-                email=email,
-                password=contraseña,
-                telefono=telefono
-            )
-
-            success = self.model.registrar(nuevo_usuario)
-            if success:
-                return True, "Usuario creador correctamente, inicia sesion"
-            else:
-                return False, "Usuario Existente"
-
-        except ValidationError as e:
-            return False, e.errors()[0]['msg']
-    
-    def login(self, email, password):
-        try:
-            print("ENTRÉ AL LOGIN CONTROLLER")
-    
-            user = self.model.validar_login(email, password)
-    
-            if user:
-                return user, "Login correcto"
-            else:
-                return False, "Credenciales incorrectas"
-    
-        except ValidationError as e:
-            return False, e.errors()[0]['msg']
-        
-    def existe(self, correo):
-        try:
-            user = self.model.existe_correo(correo)
-            
-            if user:
-                return True, "Existe correo"
-            else:
-                return False, "No existe"
-            
-        except ValidationError as e:
-            return False, e.errors()[0]['msg']
-    
-    def cambiar(self,password,correo):
-        try:
-            cambio = self.model.cambiar_password(password, correo)
-            
-            if cambio:
-                return True, "Contraseña cambiada exitosamente"
-            else:
-                return False, "Hubo problemas verifique"
-            
-        except ValidationError as e:
-            return False, e.errors()[0]['msg']
-    
     
