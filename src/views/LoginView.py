@@ -7,33 +7,7 @@ import requests
 
 
 def LoginView(page: ft.Page, auth_controller):
-    
-    def ver_contra():
-        contra.password = not contra.password
-        contra.update()
-        
-    correo=(ft.TextField(label="Correo",autofocus=True, icon=ft.Icons.PERSON ))
-    contra=(ft.TextField(label="Contraseña",suffix=ft.IconButton(icon=ft.Icons.VISIBILITY, on_click=ver_contra) ,password=True, autofocus=True, icon=ft.Icons.PASSWORD))
-    
-    def login_click(e):
-        if not correo.value or not contra.value:
-            page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete todos los campos")))
-            return
-        
-    
-        user, msg = auth_controller.login(correo.value, contra.value)
-    
-        if user:
-            page.user_data = user
-            page.go("/clases")
-        else:
-            page.show_dialog(ft.SnackBar(ft.Text(msg)))
-            
-    def olvidado():
-        page.go("/olvidado")
-    
-    def registro():
-        page.go("/registro")
+
     
     def login_google():
         flow = InstalledAppFlow.from_client_secrets_file(
@@ -96,19 +70,15 @@ def LoginView(page: ft.Page, auth_controller):
     google_btn = ft.ElevatedButton(
         content=ft.Row([
             ft.Icon(ft.Icons.LOGIN),
-            ft.Text("Continuar con Google")
+            ft.Text("Autorizacion con Google")
         ],
         alignment=ft.MainAxisAlignment.CENTER),
+        width=250,
     
-        bgcolor=ft.Colors.WHITE,
+        bgcolor=ft.Colors.GREEN,
         color=ft.Colors.BLACK,
         on_click=login_google_click
     )
-    
-    iniciar=( ft.ElevatedButton("Iniciar sesion",color=ft.Colors.WHITE ,bgcolor=ft.Colors.BLUE,on_click=login_click))
-    registrarse =( ft.TextButton("¿Quieres registrarte?", on_click=registro))
-    olvidada =( ft.TextButton("¿Olvidaste la contraseña?", on_click=olvidado))
-    
     
     
     return ft.View(
@@ -117,25 +87,35 @@ def LoginView(page: ft.Page, auth_controller):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         appbar=ft.AppBar(
             title=ft.Text("Login"),
-            bgcolor=ft.Colors.BLUE_GREY_900,
+            bgcolor=ft.Colors.GREEN_500,
             color="white"
         ),
         controls=[
-            ft.Column(
-                [
-                    ft.Icon(ft.Icons.LOCK_PERSON, size=50, color=ft.Colors.BLUE),
-                    ft.Text("Acceso al sistema", size=24, weight="bold"),
-                    correo,
-                    contra,
-                    iniciar,
-                    google_btn,
-                    registrarse,
-                    olvidada
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=20,
-                tight=True 
-            )
+            ft.Card(
+                shadow_color=ft.Colors.GREEN_ACCENT,
+                elevation = 28,
+                shape=ft.RoundedRectangleBorder(radius=15),
+                content=ft.Container(
+                    padding=20,
+                    
+                    content=ft.Column(
+                        [
+                            ft.Icon(ft.Icons.LOCK_PERSON, size=50, color=ft.Colors.GREEN),
+                            ft.Text("Sistema ClassFlow", size=24, weight="bold"),
+                            google_btn,
+                            ft.Text(
+                                "Nota: Este sistema solo acepta inicios de sesión con Google",
+                                size=14,
+                                weight="bold"
+                            ),
+                        ],
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=20,
+                        tight=True
+                    )
+                )
+            )            
+            
         ]
     )
     
