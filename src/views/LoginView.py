@@ -42,11 +42,15 @@ def LoginView(page: ft.Page, auth_controller):
                 "openid",
                 "https://www.googleapis.com/auth/userinfo.email",
                 "https://www.googleapis.com/auth/userinfo.profile",
-                "https://www.googleapis.com/auth/classroom.courses.readonly"
+                "https://www.googleapis.com/auth/classroom.courses.readonly",
+                "https://www.googleapis.com/auth/classroom.rosters.readonly",
+                "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly",
+                "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"
             ]
         )
         creds = flow.run_local_server(port=0)
         return creds
+
 
     def get_user_info(creds):
         r = requests.get(
@@ -84,7 +88,8 @@ def LoginView(page: ft.Page, auth_controller):
 
         page.user_data = {
             "usuario": user,
-            "clases": courses
+            "clases": courses,
+            "creds": creds
         }
         page.go("/clases")
 

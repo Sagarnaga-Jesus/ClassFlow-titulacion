@@ -31,11 +31,11 @@ def start(page: ft.Page):
         elif page.route == "/clases":
             page.views.append(ClasesView(page, clases, unidades))
         elif page.route.startswith("/unidades"):
-            id_clase = page.route.split("/unidades/")[1]
-            page.views.append(UnidadesView(page, unidades, {"id_clase": id_clase}))
+            id_clase = page.route.split("/unidades")
+            page.views.append(UnidadesView(page, unidades,))
         elif page.route.startswith("/participantes"):
-            id_clase = page.route.split("/participantes/")[1]
-            page.views.append(ParticipantesView(page, participantes, clases ,{"id_clase": id_clase}))
+            id_clase = page.route.split("/participantes")
+            page.views.append(ParticipantesView(page, participantes, clases))
         elif page.route == "/registro":
             page.views.append(RegistroView(page,auth))
             
