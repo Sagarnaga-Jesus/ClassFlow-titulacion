@@ -67,40 +67,42 @@ def LoginView(page: ft.Page, auth_controller):
         }
         page.go("/clases")
 
+    appbar_color = ft.Colors.BLUE_500
+    button_color = ft.Colors.GREEN
+    
     google_btn = ft.ElevatedButton(
         content=ft.Row([
             ft.Icon(ft.Icons.LOGIN),
-            ft.Text("Autorizacion con Google")
-        ],
-        alignment=ft.MainAxisAlignment.CENTER),
+            ft.Text("Autorización con Google")
+        ], alignment=ft.MainAxisAlignment.CENTER),
         width=250,
-    
-        bgcolor=ft.Colors.GREEN,
-        color=ft.Colors.BLACK,
+        bgcolor=button_color,
+        color=ft.Colors.WHITE,
         on_click=login_google_click
     )
-    
-    
+
     return ft.View(
         route="/",
-        vertical_alignment=ft.MainAxisAlignment.CENTER, 
+        vertical_alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         appbar=ft.AppBar(
             title=ft.Text("Login"),
-            bgcolor=ft.Colors.GREEN_500,
+            bgcolor=appbar_color,
             color="white"
         ),
         controls=[
             ft.Card(
-                shadow_color=ft.Colors.GREEN_ACCENT,
-                elevation = 28,
+                bgcolor=ft.Colors.WHITE,
+                shadow_color=ft.Colors.BLUE_600,
+                elevation=24,
                 shape=ft.RoundedRectangleBorder(radius=15),
                 content=ft.Container(
+                    border=ft.border.all(2, ft.Colors.BLUE),   # borde azul
+                    border_radius=15,
                     padding=20,
-                    
                     content=ft.Column(
                         [
-                            ft.Icon(ft.Icons.LOCK_PERSON, size=50, color=ft.Colors.GREEN),
+                            ft.Icon(ft.Icons.LOCK_PERSON, size=50, color=button_color),
                             ft.Text("Sistema ClassFlow", size=24, weight="bold"),
                             google_btn,
                             ft.Text(
@@ -114,8 +116,6 @@ def LoginView(page: ft.Page, auth_controller):
                         tight=True
                     )
                 )
-            )            
-            
+            )
         ]
     )
-    

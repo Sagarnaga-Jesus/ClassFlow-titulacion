@@ -10,7 +10,15 @@ def UnidadesView(page, unidades_controller):
         return
         
     nombre = ft.TextField(label="Nombre de la unidad", icon=ft.Icons.TITLE)
-    lista_unidades = ft.Column(scroll=ft.ScrollMode.ALWAYS, expand=True)
+    lista_unidades = ft.GridView(
+    expand=True,
+    max_extent=250,   # ancho máximo por tarjeta
+    child_aspect_ratio=2,  # proporción ancho/alto
+    spacing=20,
+    run_spacing=20
+    )
+
+
     
     def cargar_unidades():
         lista_unidades.controls.clear()

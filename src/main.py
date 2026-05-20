@@ -1,8 +1,6 @@
 import flet as ft
 from views.LoginView import LoginView
-from views.OlvidadoView import OlvidadoView
 from views.ClasesView import ClasesView
-from views.RegistroView import RegistroView
 from views.UnidadesView import UnidadesView
 from views.ParticipantesView import ParticipantesView
 from controllers.UserController import AuthController
@@ -26,8 +24,6 @@ def start(page: ft.Page):
         
         if page.route == "/":
             page.views.append(LoginView(page,auth))
-        if page.route == "/olvidado":
-            page.views.append(OlvidadoView(page,auth))
         elif page.route == "/clases":
             page.views.append(ClasesView(page, clases, unidades))
         elif page.route.startswith("/unidades"):
@@ -36,8 +32,6 @@ def start(page: ft.Page):
         elif page.route.startswith("/participantes"):
             id_clase = page.route.split("/participantes")
             page.views.append(ParticipantesView(page, participantes, clases))
-        elif page.route == "/registro":
-            page.views.append(RegistroView(page,auth))
             
             #agregas aqui las vistas que necesites
         page.update()

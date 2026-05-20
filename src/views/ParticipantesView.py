@@ -8,33 +8,27 @@ def ParticipantesView(page,participantes_controller,clases_controller):
         page.show_snack_bar(ft.SnackBar(ft.Text("No hay clase seleccionada"), bgcolor="red"))
         return
 
-    lista_participantes = ft.Column(
-        scroll=ft.ScrollMode.ALWAYS,
-        expand=True
-    )
+    lista_participantes = ft.ListView(expand=True, spacing=10)
 
     def cargar_participantes():
         lista_participantes.controls.clear()
-    
+        
         id_google = clase["id_google"]
         creds = page.user_data.get("creds")
-    
+        
         participantes = participantes_controller.obtener_google(creds, id_google)
-    
+        
         for p in participantes:
             lista_participantes.controls.append(
-                ft.Card(
-                    content=ft.Container(
-                        padding=15,
-                        content=ft.Column([
-                            ft.Text(p["nombre"], size=18, weight="bold"),
-                            ft.Text(p["email"])
-                        ])
-                    )
+                ft.ListTile(
+                    leading=ft.Icon(ft.Icons.PERSON, color=ft.Colors.BLUE),
+                    title=ft.Text(p["nombre"], size=18, weight="bold"),
+                    subtitle=ft.Text(p["email"], color=ft.Colors.BLUE_GREY_400)
                 )
             )
-    
+        
         page.update()
+
 
     cargar_participantes()
 
