@@ -21,6 +21,13 @@ class ClasesModel:
     def agregar_clase(self, id_profesor, id_google, nombre, descripcion):
         conn = self.db.get_connection()
         cursor = conn.cursor()
+        
+        cursor.execute("""SELECT * FROM clase WHERE id_google = %s AND id_profesor = %s""",(id_google, id_profesor))
+        existe = cursor.fetchone()
+    
+        if existe:
+            return False, "Clase ya existente"
+            
         cursor.execute(
             "INSERT INTO clase (nombre, descripcion, id_profesor, id_google) VALUES (%s, %s, %s,%s)",
             (nombre,descripcion,id_profesor,id_google)

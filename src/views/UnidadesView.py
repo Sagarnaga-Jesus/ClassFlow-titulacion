@@ -67,8 +67,8 @@ def UnidadesView(page, unidades_controller):
             color="white",
             actions=[
                 ft.IconButton(ft.Icons.WEB_STORIES, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
-                    ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
-                    ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=lambda _: page.go("/"), tooltip="Cerrar sesión")
+                ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
+                ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=lambda _: page.go("/"), tooltip="Cerrar sesión")
                 ],
         ),
         

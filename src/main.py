@@ -2,6 +2,7 @@ import flet as ft
 from views.LoginView import LoginView
 from views.ClasesView import ClasesView
 from views.UnidadesView import UnidadesView
+from views.PerfilView import PerfilView
 from views.ParticipantesView import ParticipantesView
 from controllers.UserController import AuthController
 from controllers.ApartadosController import ClasesController, UnidadesController
@@ -13,8 +14,6 @@ def start(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.window_width = 450
     page.window_height = 700
-    
-    # instanciar controladores una sola
     auth = AuthController()
     clases = ClasesController()
     unidades = UnidadesController()
@@ -26,14 +25,13 @@ def start(page: ft.Page):
             page.views.append(LoginView(page,auth))
         elif page.route == "/clases":
             page.views.append(ClasesView(page, clases, unidades))
+        elif page.route == "/perfil":
+            page.views.append(PerfilView(page, unidades,))
         elif page.route.startswith("/unidades"):
-            id_clase = page.route.split("/unidades")
             page.views.append(UnidadesView(page, unidades,))
         elif page.route.startswith("/participantes"):
-            id_clase = page.route.split("/participantes")
             page.views.append(ParticipantesView(page, participantes, clases))
             
-            #agregas aqui las vistas que necesites
         page.update()
 
     def view_pop(e):

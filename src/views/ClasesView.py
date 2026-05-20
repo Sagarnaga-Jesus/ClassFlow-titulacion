@@ -21,8 +21,8 @@ def ClasesView(page, clases_controller, unidades_controller):
     
     lista_clases = ft.GridView(
     expand=True,
-    max_extent=250,   # ancho máximo por tarjeta
-    child_aspect_ratio=2,  # proporción ancho/alto
+    max_extent=250,
+    child_aspect_ratio=2,
     spacing=20,
     run_spacing=20
     )
@@ -85,7 +85,7 @@ def ClasesView(page, clases_controller, unidades_controller):
         icon=ft.Icons.ADD,
         on_click=agregar,
         tooltip="Agregar clase",
-        bgcolor=ft.Colors.GREEN,   # verde acento
+        bgcolor=ft.Colors.GREEN,
         foreground_color=ft.Colors.WHITE
     )
     
@@ -93,7 +93,7 @@ def ClasesView(page, clases_controller, unidades_controller):
         route="/clases",
         appbar=ft.AppBar(
             title=ft.Text("Clases"),
-            bgcolor=ft.Colors.BLUE_900,   # azul base
+            bgcolor=ft.Colors.BLUE_900,
             color="white",
             actions=[
                 ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
