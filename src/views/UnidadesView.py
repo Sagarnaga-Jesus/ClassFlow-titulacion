@@ -1,5 +1,4 @@
 import flet as ft
-from controllers.ParticipantesController import ParticipantesController
 
 def UnidadesView(page, unidades_controller):
     
@@ -12,12 +11,14 @@ def UnidadesView(page, unidades_controller):
     nombre = ft.TextField(label="Nombre de la unidad", icon=ft.Icons.TITLE)
     lista_unidades = ft.GridView(
     expand=True,
-    max_extent=250,   # ancho máximo por tarjeta
-    child_aspect_ratio=2,  # proporción ancho/alto
+    max_extent=250,
+    child_aspect_ratio=2,
     spacing=20,
     run_spacing=20
     )
-
+    def actividad_click(clase):
+        page.user_data["clase_actual"] = clase
+        page.go("/actividad")
 
     
     def cargar_unidades():
@@ -27,11 +28,13 @@ def UnidadesView(page, unidades_controller):
         for u in unidades:
             lista_unidades.controls.append(
                 ft.ElevatedButton(
+                    on_click=actividad_click,
                     content=ft.Container(
                         padding=20,
                         width=250, 
                         content=ft.Column([
                             ft.Text(u["nombre"], size=18, weight="bold"),
+                            
                         ])
                     ),
                     style=ft.ButtonStyle(
@@ -44,6 +47,8 @@ def UnidadesView(page, unidades_controller):
         page.update()
     
     cargar_unidades()
+    
+    
     
     def agregar():
         if not nombre.value:
@@ -68,7 +73,6 @@ def UnidadesView(page, unidades_controller):
             actions=[
                 ft.IconButton(ft.Icons.WEB_STORIES, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
                 ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
-                ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=lambda _: page.go("/"), tooltip="Cerrar sesión")
                 ],
         ),
         

@@ -2,6 +2,7 @@ import flet as ft
 from views.LoginView import LoginView
 from views.ClasesView import ClasesView
 from views.UnidadesView import UnidadesView
+from views.ActividadView import ActividadView
 from views.PerfilView import PerfilView
 from views.ParticipantesView import ParticipantesView
 from controllers.UserController import AuthController
@@ -26,9 +27,11 @@ def start(page: ft.Page):
         elif page.route == "/clases":
             page.views.append(ClasesView(page, clases, unidades))
         elif page.route == "/perfil":
-            page.views.append(PerfilView(page, unidades,))
+            page.views.append(PerfilView(page))
         elif page.route.startswith("/unidades"):
-            page.views.append(UnidadesView(page, unidades,))
+            page.views.append(UnidadesView(page, unidades))
+        elif page.route.startswith("/actividad"):
+            page.views.append(ActividadView(page,))
         elif page.route.startswith("/participantes"):
             page.views.append(ParticipantesView(page, participantes, clases))
             

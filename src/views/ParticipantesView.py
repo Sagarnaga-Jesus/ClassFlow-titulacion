@@ -42,19 +42,9 @@ def ParticipantesView(page,participantes_controller,clases_controller):
 
             actions=[
 
-                ft.IconButton(
-                    ft.Icons.ARROW_BACK,
-                    on_click=lambda _:
-                    page.go(
-                        f"/unidades/{clase['id_clase']}"
-                    )
-                ),
-
-                ft.IconButton(
-                    ft.Icons.WEB_STORIES,
-                    on_click=lambda _:
-                    page.go("/clases")
-                )
+                ft.IconButton(ft.Icons.ARROW_BACK,on_click=lambda _:page.go(    f"/unidades/{clase['id_clase']}")),
+                ft.IconButton(ft.Icons.WEB_STORIES,on_click=lambda _:page.go("/clases")),
+                ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
             ]
         ),
 

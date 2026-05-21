@@ -97,7 +97,6 @@ def ClasesView(page, clases_controller, unidades_controller):
             color="white",
             actions=[
                 ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
-                ft.IconButton(ft.Icons.EXIT_TO_APP, on_click=lambda _: page.go("/"), tooltip="Cerrar sesión")
             ],
         ),
         controls=[
