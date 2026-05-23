@@ -1,4 +1,5 @@
 from models.databaseModel import Database
+from googleapiclient.discovery import build
 
 class ClasesModel:
     def __init__(self):
@@ -62,3 +63,75 @@ class UnidadesModel:
         )
         conn.commit()
         conn.close()
+
+class ActividadesModel:
+    
+    def __init__(self):
+        self.db = Database()
+    
+    def google_actividades(self, creds, id_google):
+        service = build("classroom", "v1", credentials=creds)
+        actividades = []
+        page_token = None
+
+        while True:
+            try:
+                response = service.courses().courseWork().list(
+                    courseId=id_google,
+                    pageToken=page_token
+                ).execute()
+
+                for a in response.get("courseWork", []):
+                    actividades.append({
+                        "id_google": a["id"],
+                        "titulo": a["title"],
+                        "descripcion": a.get("description"),
+                        "fecha_entrega": a.get("dueDate"),
+                        "tipo": a.get("workType")
+                    })
+
+                page_token = response.get("nextPageToken")
+                if not page_token:
+                    break
+
+            except Exception as e:
+                print("Error obteniendo actividades:", e)
+                break
+
+        return actividades
+    
+    def guardar_actividades(self, id_google_clase, actividades):
+        conn = self.db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("SELECT id_clase FROM clase WHERE id_google=%s", (id_google_clase,))
+        row = cursor.fetchone()
+        if not row:
+            print("Clase no encontrada en BD")
+            return
+        id_clase_interno = row["id_clase"]
+    
+        for act in actividades:
+            fecha = None
+            if act["fecha_entrega"]:
+                fecha = f"{act['fecha_entrega']['year']}-{act['fecha_entrega']['month']:02d}-{act['fecha_entrega']['day']:02d}"
+    
+            cursor.execute("SELECT id_actividades FROM actividades WHERE id_google=%s", (act["id_google"],))
+            row_act = cursor.fetchone()
+    
+            if row_act:
+                cursor.execute(
+                    "UPDATE actividades SET nombre=%s, descripcion=%s, fecha_entrega=%s, tipo=%s WHERE id_google=%s",
+                    (act["titulo"], act["descripcion"], fecha, act["tipo"], act["id_google"])
+                )
+            else:
+                cursor.execute(
+                    "INSERT INTO actividades (id_google, nombre, descripcion, fecha_entrega, tipo) VALUES (%s, %s, %s, %s, %s)",
+                    (act["id_google"], act["titulo"], act["descripcion"], fecha, act["tipo"])
+                )
+    
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+

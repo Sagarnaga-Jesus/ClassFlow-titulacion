@@ -1,7 +1,7 @@
 import flet as ft
 from pydantic import ValidationError
 from models.databaseModel import Database
-from models.ApartadosModel import ClasesModel, UnidadesModel
+from models.ApartadosModel import ClasesModel, UnidadesModel, ActividadesModel
 
 class ClasesController:
     def __init__(self):
@@ -33,3 +33,12 @@ class UnidadesController:
         
         return True, "Unidad agregada exitosamente"
     
+
+class ActividadesController:
+    def __init__(self):
+        self.model = ActividadesModel()
+    
+    def obtener_actividades(self, creds, id_google):
+        actividades = self.model.google_actividades(creds, id_google)
+        self.model.guardar_actividades(id_google, actividades)
+        return actividades

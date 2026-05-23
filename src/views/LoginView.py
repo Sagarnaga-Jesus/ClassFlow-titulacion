@@ -97,7 +97,7 @@ def LoginView(page: ft.Page, auth_controller):
                 elevation=24,
                 shape=ft.RoundedRectangleBorder(radius=15),
                 content=ft.Container(
-                    border=ft.border.all(2, ft.Colors.BLUE),   # borde azul
+                    border=ft.border.all(2, ft.Colors.BLUE),
                     border_radius=15,
                     padding=20,
                     content=ft.Column(

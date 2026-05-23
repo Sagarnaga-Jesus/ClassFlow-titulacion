@@ -1,6 +1,6 @@
 import flet as ft
 
-def UnidadesView(page, unidades_controller):
+def UnidadesView(page, unidades_controller, actividades_controller):
     
     clase = page.user_data.get("clase_actual")
     
@@ -16,10 +16,15 @@ def UnidadesView(page, unidades_controller):
     spacing=20,
     run_spacing=20
     )
-    def actividad_click(clase):
-        page.user_data["clase_actual"] = clase
+    
+    def actividad_click(unidad):
+        creds = page.user_data["creds"]
+        id_google = page.user_data["clase_actual"]["id_google"]
+    
+        actividades = actividades_controller.obtener_actividades(creds,id_google)
+        page.user_data["actividades"]= actividades
+        page.user_data["unidad_actual"] = unidad
         page.go("/actividad")
-
     
     def cargar_unidades():
         lista_unidades.controls.clear()
@@ -27,20 +32,16 @@ def UnidadesView(page, unidades_controller):
 
         for u in unidades:
             lista_unidades.controls.append(
-                ft.ElevatedButton(
-                    on_click=actividad_click,
+                ft.Card(
                     content=ft.Container(
-                        padding=20,
-                        width=250, 
+                        padding=15,
                         content=ft.Column([
                             ft.Text(u["nombre"], size=18, weight="bold"),
-                            
-                        ])
+                            ft.Text("Haz clic para ver actividades", size=12, color=ft.Colors.GREY)
+                        ]),
+                        on_click=lambda e, u=u: actividad_click(u),
                     ),
-                    style=ft.ButtonStyle(
-                        shape=ft.RoundedRectangleBorder(radius=15),
-                        elevation=5
-                    )
+                    elevation=5
                 )
             )
 
