@@ -53,6 +53,14 @@ def ClasesView(page, clases_controller, unidades_controller):
         page.user_data["clase_actual"] = clase
         page.go("/unidades")
         
+    def eliminar(c):
+        id_clase = c["id_clase"]
+        msg=clases_controller.eliminar_clase(id_clase)
+        if msg:
+            cargar_clases()
+            page.show_dialog(ft.SnackBar(ft.Text(msg)))
+        page.show_dialog(ft.SnackBar(ft.Text("Hubo un error al eliminar")))
+        
     def cargar_clases():
         if user and 'id_profesor' in user:
             lista_clases.controls.clear()
@@ -70,9 +78,16 @@ def ClasesView(page, clases_controller, unidades_controller):
                             width=500,
                             on_click=lambda e, c=c: unidades_click(c),
                             content=ft.Column([
-                                ft.Text(c["nombre"], size=22, weight="bold", color=ft.Colors.BLUE_700),
+                                ft.Row([
+                                    ft.Text(c["nombre"], size=22, weight="bold", color=ft.Colors.BLUE_700),
+                                    ft.IconButton(
+                                        ft.Icons.DELETE,
+                                        tooltip="Eliminar clase",
+                                        on_click=lambda e, c=c: eliminar(c)
+                                    )
+                                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
                                 ft.Text(c["descripcion"], size=18, color=ft.Colors.BLUE_GREY_400),
-                            ], alignment=ft.MainAxisAlignment.CENTER)
+                            ], alignment=ft.MainAxisAlignment.START)
                         )
                     )
                 )

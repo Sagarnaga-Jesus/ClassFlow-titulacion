@@ -20,6 +20,9 @@ class ClasesController:
         )
     
         return success, message
+    
+    def eliminar_clase(self, id_clase):
+        return self.model.eliminar(id_clase)
 
 class UnidadesController:
     def __init__(self):
@@ -28,11 +31,13 @@ class UnidadesController:
     def obtener_unidades(self, id_clase):
         return self.model.obtener_unidades(id_clase)
 
-    def agregar_unidad(self, id_clase, nombre):
-        self.model.agregar_unidad(id_clase, nombre)
+    def agregar_unidad(self, id_clase, nombre, examen, proyecto, lista, actividades, extra):
+        self.model.agregar_unidad(id_clase, nombre, examen, proyecto, lista, actividades, extra)
         
         return True, "Unidad agregada exitosamente"
     
+    def elimina(self, id_unidad):
+        return self.model.eliminar_unidad(id_unidad)
 
 class ActividadesController:
     def __init__(self):

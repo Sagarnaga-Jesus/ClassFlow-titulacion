@@ -35,6 +35,17 @@ class ClasesModel:
         )
         conn.commit()
         conn.close()
+        return True, "Clase agregada correctamente"
+    
+    def eliminar(self, id_clase):
+        conn = self.db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("DELETE FROM clase WHERE id_clase=%s", (id_clase,))
+        conn.commit()
+        conn.close()
+        return "clase eliminada"
+        
+
 
 class UnidadesModel:
     def __init__(self):
@@ -54,15 +65,24 @@ class UnidadesModel:
             cursor.close()
             conn.close()
     
-    def agregar_unidad(self, id_clase, nombre):
+    def agregar_unidad(self, id_clase, nombre, examen, proyecto, lista, actividades, extra):
         conn = self.db.get_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT INTO unidad (nombre, id_clase) VALUES (%s, %s)",
-            (nombre, id_clase)
+            "INSERT INTO unidad (nombre, examen, proyecto, lista, actividades, extra ,id_clase) VALUES (%s, %s,%s, %s,%s, %s,%s)",
+            (nombre, examen, proyecto, lista, actividades, extra, id_clase)
         )
         conn.commit()
         conn.close()
+    
+    def eliminar_unidad(self, id_unidad):
+        conn = self.db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("DELETE FROM unidad WHERE id_unidad=%s", (id_unidad,))
+        conn.commit()
+        conn.close()
+        return "unidad eliminada"
+    
 
 class ActividadesModel:
     

@@ -40,6 +40,7 @@ class ParticipantesModel:
     def guardar_participantes(self, id_clase, participantes):
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
+    
         for p in participantes:
             id_google = p["id_google"]
             nombre = p["nombre"]
@@ -48,26 +49,25 @@ class ParticipantesModel:
             cursor.execute("SELECT id_alumno FROM alumnos WHERE id_google=%s", (id_google,))
             alumno = cursor.fetchone()
     
-            if alumno:
+            if alumno is not None:
                 cursor.execute(
                     "UPDATE alumnos SET nombre=%s, correo=%s WHERE id_google=%s",
                     (nombre, email, id_google)
                 )
-                id_alumno = alumno[0]
+                id_alumno = alumno["id_alumno"]
             else:
                 cursor.execute(
                     "INSERT INTO alumnos (id_google, nombre, correo) VALUES (%s, %s, %s)",
                     (id_google, nombre, email)
                 )
                 id_alumno = cursor.lastrowid
-    
             cursor.execute(
-                "INSERT INTO alumnos_clase (id_alumno, id_clase) VALUES (%s, %s)",
+                "INSERT IGNORE INTO alumnos_clase (id_alumno, id_clase) VALUES (%s, %s)",
                 (id_alumno, id_clase)
             )
-
     
         conn.commit()
         cursor.close()
         conn.close()
+
 

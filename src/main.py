@@ -10,11 +10,13 @@ from controllers.ApartadosController import ClasesController, UnidadesController
 from controllers.ParticipantesController import ParticipantesController
 
 def start(page: ft.Page):
+    
     page.title = "ClassFlow"
     page.scroll = ft.ScrollMode.AUTO
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.window_width = 450
-    page.window_height = 700
+    page.window_width = 500
+    page.window_height = 800
+    
     auth = AuthController()
     clases = ClasesController()
     unidades = UnidadesController()
@@ -29,8 +31,8 @@ def start(page: ft.Page):
             page.views.append(ClasesView(page, clases, unidades))
         elif page.route == "/perfil":
             page.views.append(PerfilView(page))
-        elif page.route == ("/unidades"):
-            page.views.append(UnidadesView(page, unidades,actividades))
+        elif page.route.startswith("/unidades"):
+            page.views.append(UnidadesView(page, unidades, actividades))
         elif page.route == ("/actividad"):
             page.views.append(ActividadesView(page,actividades))
         elif page.route == ("/participantes"):

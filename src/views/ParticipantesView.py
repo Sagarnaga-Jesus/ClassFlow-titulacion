@@ -23,7 +23,7 @@ def ParticipantesView(page,participantes_controller,clases_controller):
                 ft.ListTile(
                     leading=ft.Icon(ft.Icons.PERSON, color=ft.Colors.BLUE),
                     title=ft.Text(p["nombre"], size=18, weight="bold"),
-                    subtitle=ft.Text(p["email"], color=ft.Colors.BLUE_GREY_400)
+                    subtitle=ft.Text(p["email"], color=ft.Colors.BLUE_GREY_400, size=14,)
                 )
             )
         
@@ -37,12 +37,11 @@ def ParticipantesView(page,participantes_controller,clases_controller):
 
         appbar=ft.AppBar(
             title=ft.Text("Participantes"),
-            bgcolor=ft.Colors.BLUE_GREY_900,
+            bgcolor=ft.Colors.BLUE_900,
             color="white",
 
             actions=[
-
-                ft.IconButton(ft.Icons.ARROW_BACK,on_click=lambda _:page.go(f"/unidades/{clase['id_clase']}")),
+                ft.IconButton(ft.Icons.ARROW_BACK,on_click=lambda _:page.go(f"/unidades/{clase.get("id_clase","")}")),
                 ft.IconButton(ft.Icons.WEB_STORIES,on_click=lambda _:page.go("/clases")),
                 ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
             ]

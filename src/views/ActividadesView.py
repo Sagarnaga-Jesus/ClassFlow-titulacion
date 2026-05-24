@@ -30,7 +30,7 @@ def ActividadesView(page, actividades_controller):
                     content=ft.Container(
                         padding=15,
                         content=ft.Column([
-                            ft.Text(act["titulo"], size=18, weight="bold"),
+                            ft.Text(act["titulo"], size=18, weight="bold", color="Green"),
                             ft.Text(act.get("description", "Sin descripción"), size=14, color=ft.Colors.GREY),
                         ]),
                         on_click=lambda e, a=act: actividad_click(e, a)
@@ -48,9 +48,10 @@ def ActividadesView(page, actividades_controller):
         route="/actividad",
         appbar=ft.AppBar(
             title=ft.Text(f"Actividades"),
-            bgcolor=ft.Colors.BLUE_GREY_900,
+            bgcolor=ft.Colors.BLUE_900,
             color="white",
             actions=[
+                ft.IconButton(ft.Icons.ARROW_BACK,on_click=lambda _:page.go(f"/unidades/{clase.get("id_clase","")}")),
                 ft.IconButton(ft.Icons.WEB_STORIES, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
                 ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
             ],
