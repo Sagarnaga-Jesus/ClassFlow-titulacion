@@ -42,8 +42,14 @@ class UnidadesController:
 class ActividadesController:
     def __init__(self):
         self.model = ActividadesModel()
+        
+    def obtener_google(self, creds, id_google):
+        return self.model.google_actividades(creds,id_google)
     
-    def obtener_actividades(self, creds, id_google):
-        actividades = self.model.google_actividades(creds, id_google)
-        self.model.guardar_actividades(id_google, actividades)
-        return actividades
+    def obtener_actividades(self, id_unidad):
+        return self.model.obtener_actividades(id_unidad)
+        
+    
+    def agregar_actividad(self, id_unidad, titulo, descripcion, tipo, valor, fecha_entrega, id_google):
+        return self.model.guardar_actividades(id_unidad, titulo, descripcion, tipo, valor, fecha_entrega, id_google)
+

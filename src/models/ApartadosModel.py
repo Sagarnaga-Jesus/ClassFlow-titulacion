@@ -107,7 +107,8 @@ class ActividadesModel:
                         "titulo": a["title"],
                         "descripcion": a.get("description"),
                         "fecha_entrega": a.get("dueDate"),
-                        "tipo": a.get("workType")
+                        "tipo": a.get("workType"),
+                        "valor": a.get("maxPoints", 0)
                     })
 
                 page_token = response.get("nextPageToken")
@@ -120,38 +121,37 @@ class ActividadesModel:
 
         return actividades
     
-    def guardar_actividades(self, id_google_clase, actividades):
+    def guardar_actividades(self, id_unidad, titulo, descripcion, tipo, valor, fecha_entrega, id_google):
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        cursor.execute("SELECT id_clase FROM clase WHERE id_google=%s", (id_google_clase,))
-        row = cursor.fetchone()
-        if not row:
-            print("Clase no encontrada en BD")
-            return
-        id_clase_interno = row["id_clase"]
+        cursor.execute("SELECT id_actividades FROM actividades WHERE id_google=%s", (id_google,))
+        existe = cursor.fetchone()
     
-        for act in actividades:
-            fecha = None
-            if act["fecha_entrega"]:
-                fecha = f"{act['fecha_entrega']['year']}-{act['fecha_entrega']['month']:02d}-{act['fecha_entrega']['day']:02d}"
-    
-            cursor.execute("SELECT id_actividades FROM actividades WHERE id_google=%s", (act["id_google"],))
-            row_act = cursor.fetchone()
-    
-            if row_act:
-                cursor.execute(
-                    "UPDATE actividades SET nombre=%s, descripcion=%s, fecha_entrega=%s, tipo=%s WHERE id_google=%s",
-                    (act["titulo"], act["descripcion"], fecha, act["tipo"], act["id_google"])
-                )
-            else:
-                cursor.execute(
-                    "INSERT INTO actividades (id_google, nombre, descripcion, fecha_entrega, tipo) VALUES (%s, %s, %s, %s, %s)",
-                    (act["id_google"], act["titulo"], act["descripcion"], fecha, act["tipo"])
-                )
-    
+        if existe:
+            return False, "Clase ya existente"
+            
+        cursor.execute(
+            "INSERT INTO actividades (nombre, descripcion, tipo, valor, fecha_entrega, id_google, id_unidad) VALUES (%s, %s, %s,%s,%s, %s,%s)",
+            (titulo,descripcion, tipo, valor, fecha_entrega, id_google, id_unidad)
+        )
         conn.commit()
         cursor.close()
         conn.close()
+        return True, "Actividad agregada correctamente"
+    
 
+    def obtener_actividades(self, id_unidad):
+        conn = self.db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute("SELECT * FROM actividades WHERE id_unidad = %s", (id_unidad,))
+            clases = cursor.fetchall()
+            return clases
+        except Exception as e:
+            print(f"Error: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
 

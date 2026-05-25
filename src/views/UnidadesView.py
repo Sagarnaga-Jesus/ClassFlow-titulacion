@@ -15,7 +15,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         creds = page.user_data["creds"]
         id_google = page.user_data["clase_actual"]["id_google"]
     
-        actividades = actividades_controller.obtener_actividades(creds,id_google)
+        actividades = actividades_controller.obtener_google(creds,id_google)
         page.user_data["actividades"]= actividades
         page.user_data["unidad_actual"] = unidad
         page.go("/actividad")
