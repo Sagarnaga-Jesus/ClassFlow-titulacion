@@ -37,9 +37,16 @@ class ParticipantesModel:
     
         return students
 
-    def guardar_participantes(self, id_clase, participantes):
+    def guardar_participantes(self, id_google_clase, participantes):
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
+    
+        cursor.execute("SELECT id_clase FROM clase WHERE id_google=%s", (id_google_clase,))
+        clase = cursor.fetchone()
+        if not clase:
+            print("Clase no encontrada en BD")
+            return
+        id_clase = clase["id_clase"]
     
         for p in participantes:
             id_google = p["id_google"]
@@ -61,6 +68,7 @@ class ParticipantesModel:
                     (id_google, nombre, email)
                 )
                 id_alumno = cursor.lastrowid
+    
             cursor.execute(
                 "INSERT IGNORE INTO alumnos_clase (id_alumno, id_clase) VALUES (%s, %s)",
                 (id_alumno, id_clase)
@@ -71,3 +79,19 @@ class ParticipantesModel:
         conn.close()
 
 
+    def obtener_alumnos(self, id_clase):
+        conn = self.db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+    
+        query = """
+            SELECT a.id_alumno, a.id_google, a.nombre, a.correo
+            FROM alumnos a
+            INNER JOIN alumnos_clase ac ON a.id_alumno = ac.id_alumno
+            WHERE ac.id_clase = %s
+        """
+        cursor.execute(query, (id_clase,))
+        alumnos = cursor.fetchall()
+    
+        cursor.close()
+        conn.close()
+        return alumnos

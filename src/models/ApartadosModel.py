@@ -1,6 +1,31 @@
 from models.databaseModel import Database
 from googleapiclient.discovery import build
 
+class EvaluacionModel:
+    def __init__(self):
+        self.db = Database()
+
+    def guardar_evaluacion(self, id_alumno, id_actividad, calificacion, entregado="NO", autoevaluacion=None):
+        query = """
+            INSERT INTO evaluacion (id_alumno, id_actividad, calificacion, entregado, autoevaluacion)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        values = (id_alumno, id_actividad, calificacion, entregado, autoevaluacion)
+        self.db.execute(query, values)
+        return True, "Evaluación guardada correctamente"
+
+    def obtener_evaluaciones_por_unidad(self, id_unidad):
+        query = """
+            SELECT a.id_alumno, a.nombre, act.tipo, SUM(e.calificacion) AS puntos_obtenidos, SUM(act.valor) AS puntos_posibles
+            FROM evaluacion e
+            JOIN actividades act ON e.id_actividad = act.id_actividades
+            JOIN alumnos a ON e.id_alumno = a.id_alumno
+            WHERE act.id_unidad = %s
+            GROUP BY a.id_alumno, act.tipo
+        """
+        return self.db.fetch_all(query, (id_unidad,))
+
+
 class ClasesModel:
     def __init__(self):
         self.db = Database()
@@ -154,4 +179,15 @@ class ActividadesModel:
         finally:
             cursor.close()
             conn.close()
+    
+    
+    def obtener_entregas(self, creds, course_id, coursework_id):
+        service = build("classroom", "v1", credentials=creds)
+        submissions = service.courses().courseWork().studentSubmissions().list(
+            courseId=course_id,
+            courseWorkId=coursework_id
+        ).execute().get("studentSubmissions", [])
+    
+        return [{"userId": s["userId"], "estado": s["state"]} for s in submissions]
+
 

@@ -11,7 +11,7 @@ def ActividadesView(page, actividades_controller):
 
     lista_actividades = ft.GridView(
         expand=True,
-        max_extent=250,
+        max_extent=350,
         child_aspect_ratio=2,
         spacing=20,
         run_spacing=20
@@ -67,8 +67,20 @@ def ActividadesView(page, actividades_controller):
             cargar_actividades()
 
     def actividad_click(e, actividad):
+        creds = page.user_data["creds"]
+        id_google_clase = page.user_data["clase_actual"]["id_google"]
+    
+        entregas = actividades_controller.obtener_entregas(
+            creds,
+            id_google_clase,
+            actividad["id_google"]
+        )
+    
         page.user_data["actividad_actual"] = actividad
-        page.go("/detalle_actividad")
+        page.user_data["entregas"] = entregas
+        page.go("/detalles")
+
+
 
     def cargar_actividades():
         lista_actividades.controls.clear()

@@ -3,6 +3,8 @@ from views.LoginView import LoginView
 from views.ClasesView import ClasesView
 from views.UnidadesView import UnidadesView
 from views.ActividadesView import ActividadesView
+from views.DetallesView import DetallesView
+from views.EvaluacionView import EvaluacionView
 from views.PerfilView import PerfilView
 from views.ParticipantesView import ParticipantesView
 from controllers.UserController import AuthController
@@ -22,6 +24,7 @@ def start(page: ft.Page):
     unidades = UnidadesController()
     participantes = ParticipantesController()
     actividades = ActividadesController()
+    
     def route_change(e):
         page.views.clear()
         
@@ -33,8 +36,12 @@ def start(page: ft.Page):
             page.views.append(PerfilView(page))
         elif page.route.startswith("/unidades"):
             page.views.append(UnidadesView(page, unidades, actividades))
+        elif page.route.startswith("/evaluacion"):
+            page.views.append(EvaluacionView(page,))
         elif page.route == ("/actividad"):
             page.views.append(ActividadesView(page,actividades))
+        elif page.route.startswith("/detalles"):
+            page.views.append(DetallesView(page,actividades))
         elif page.route == ("/participantes"):
             page.views.append(ParticipantesView(page, participantes, clases))
             

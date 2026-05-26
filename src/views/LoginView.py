@@ -1,7 +1,5 @@
 import flet as ft
-#from views.RegistroView import RegistroView
 from googleapiclient.discovery import build
-from datetime import datetime
 from google_auth_oauthlib.flow import InstalledAppFlow
 import requests
 
@@ -67,7 +65,6 @@ def LoginView(page: ft.Page, auth_controller):
         }
         page.go("/clases")
 
-    appbar_color = ft.Colors.BLUE_500
     button_color = ft.Colors.GREEN
     
     google_btn = ft.ElevatedButton(
@@ -87,13 +84,12 @@ def LoginView(page: ft.Page, auth_controller):
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         appbar=ft.AppBar(
             title=ft.Text("Login"),
-            bgcolor=appbar_color,
+            bgcolor=ft.Colors.BLUE_900,
             color="white"
         ),
         controls=[
             ft.Card(
-                bgcolor=ft.Colors.WHITE,
-                shadow_color=ft.Colors.BLUE_600,
+                shadow_color=ft.Colors.BLUE_900,
                 elevation=24,
                 shape=ft.RoundedRectangleBorder(radius=15),
                 content=ft.Container(

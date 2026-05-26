@@ -37,8 +37,8 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         for u in unidades:
             lista_unidades.controls.append(
                 ft.Card(
-                    width=350,
-                    height=400,
+                    width=500,
+                    height=600,
                     bgcolor=ft.Colors.WHITE,
                     shadow_color=ft.Colors.BLUE_700,
                     elevation=10,
@@ -57,10 +57,22 @@ def UnidadesView(page, unidades_controller, actividades_controller):
                                 
                                 ],alignment=ft.MainAxisAlignment.CENTER,),
                             
-                            
                             ft.Text("Valores", size=16, weight="bold", color="green"),
                             ft.Text(f"Actividades: {u["actividades"]}\n Proyecto: {u["proyecto"]} \n Examen: {u["examen"]}\n Asistencia: {u["lista"]}\n Extra: {u["extra"]}", size=14,),
-                            ft.Text("Haz clic para ver actividades", size=12, color=ft.Colors.GREEN_900)
+                            
+                            ft.TextButton(
+                                "Ir a Evaluaciones",
+                                icon=ft.Icons.BAR_CHART,
+                                style=ft.ButtonStyle(
+                                    color=ft.Colors.BLUE_700,
+                                    overlay_color=ft.Colors.BLUE_100
+                                ),
+                                on_click=lambda _: page.go("/evaluacion")
+                            )
+
+
+                            
+                            
                         ],alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER,),
                         on_click=lambda e, u=u: actividad_click(u),
                     ),

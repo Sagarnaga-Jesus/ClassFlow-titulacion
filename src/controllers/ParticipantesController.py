@@ -12,3 +12,6 @@ class ParticipantesController:
         self.model.guardar_participantes(id_clase, participantes)
 
         return participantes
+    
+    def obtener_alumnos(self, id_clase):
+        return self.model.obtener_alumnos(id_clase)

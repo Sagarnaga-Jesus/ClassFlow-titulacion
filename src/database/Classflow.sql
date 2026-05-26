@@ -23,11 +23,14 @@ CREATE TABLE IF NOT EXISTS `actividades` (
   PRIMARY KEY (`id_actividades`),
   KEY `FK_actividades_unidad` (`id_unidad`),
   CONSTRAINT `FK_actividades_unidad` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 DELETE FROM `actividades`;
 INSERT INTO `actividades` (`id_actividades`, `nombre`, `descripcion`, `tipo`, `valor`, `fecha_entrega`, `fecha_agregada`, `id_unidad`, `id_google`) VALUES
-	(4, 'Prueba 1', 'Prueba de actividad a estudiantes ', 'Actividad', 10, NULL, NULL, 31, '865886988730');
+	(4, 'Prueba 1', 'Prueba de actividad a estudiantes ', 'Actividad', 10, NULL, NULL, 31, '865886988730'),
+	(5, 'Prueba 2', 'Prueba 2 de 2 tarea', 'Actividad', 100, NULL, NULL, 31, '865990636809'),
+	(6, 'Realizar un crucigrama', 'Luis esta aburrido ', 'Actividad', 100, NULL, NULL, 32, '865999557442'),
+	(7, 'Realizar una tesis de la evaluación de la vida', 'Luis esta aburrido ', 'Proyecto', 100, NULL, NULL, 32, '865999427696');
 
 CREATE TABLE IF NOT EXISTS `alumnos` (
   `id_alumno` int(11) NOT NULL AUTO_INCREMENT,
@@ -35,52 +38,32 @@ CREATE TABLE IF NOT EXISTS `alumnos` (
   `correo` varchar(200) DEFAULT NULL,
   `id_google` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id_alumno`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 DELETE FROM `alumnos`;
 INSERT INTO `alumnos` (`id_alumno`, `nombre`, `correo`, `id_google`) VALUES
 	(9, 'Luisito (LuisitoGoat)', NULL, '104240977640611220486'),
-	(10, 'Karla Andres', NULL, '107006843594341589811');
+	(10, 'Karla Andres', NULL, '107006843594341589811'),
+	(11, 'Kenia Santana', NULL, '109266313128913532907'),
+	(12, 'Yesenia Mireles', NULL, '104341367303863112682'),
+	(13, 'Gael Carvajal', NULL, '111168379741880697071');
 
 CREATE TABLE IF NOT EXISTS `alumnos_clase` (
   `id_alumno_clase` int(11) NOT NULL AUTO_INCREMENT,
   `id_alumno` int(11) NOT NULL,
   `id_clase` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id_alumno_clase`),
-  KEY `FK__alumnos` (`id_alumno`),
+  UNIQUE KEY `uq_alumno_clase` (`id_alumno`,`id_clase`),
   CONSTRAINT `FK__alumnos` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`id_alumno`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 DELETE FROM `alumnos_clase`;
 INSERT INTO `alumnos_clase` (`id_alumno_clase`, `id_alumno`, `id_clase`) VALUES
-	(8, 9, '865000419090'),
-	(9, 10, '865000419090'),
-	(10, 9, '865000419090'),
-	(11, 10, '865000419090'),
-	(12, 9, '865000419090'),
-	(13, 10, '865000419090'),
-	(14, 9, '865000419090'),
-	(15, 10, '865000419090'),
-	(16, 9, '865000419090'),
-	(17, 10, '865000419090'),
-	(18, 9, '865000419090'),
-	(19, 10, '865000419090'),
-	(20, 9, '865000419090'),
-	(21, 10, '865000419090'),
-	(22, 9, '865000419090'),
-	(23, 10, '865000419090'),
-	(24, 9, '865000419090'),
-	(25, 10, '865000419090'),
-	(26, 9, '865000419090'),
-	(27, 10, '865000419090'),
-	(28, 9, '865000419090'),
-	(29, 10, '865000419090'),
-	(30, 9, '865000419090'),
-	(31, 10, '865000419090'),
-	(32, 9, '865000419090'),
-	(33, 10, '865000419090'),
-	(34, 9, '865000419090'),
-	(35, 10, '865000419090');
+	(61, 11, '7'),
+	(62, 12, '7'),
+	(63, 13, '7'),
+	(64, 9, '7'),
+	(65, 10, '7');
 
 CREATE TABLE IF NOT EXISTS `clase` (
   `id_clase` int(11) NOT NULL AUTO_INCREMENT,
