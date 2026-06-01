@@ -1,35 +1,57 @@
-import flet as ft
-from pydantic import ValidationError
-from models.databaseModel import Database
 from models.ApartadosModel import ClasesModel, UnidadesModel, ActividadesModel, EvaluacionModel
 from models.ParticipantesModel import ParticipantesModel
 
 class EvaluacionController:
-    def __init__(self, model, alumnos_model, unidades_model):
+    def __init__(self):
         self.model = EvaluacionModel()
-        self.alumnos_model = ParticipantesModel()
+        self.participantes_model = ParticipantesModel()
         self.unidades_model = UnidadesModel()
+        self.actividades_model = ActividadesModel()
         
+    def calcular_por_unidad(self, creds, clase, unidad):
+        participantes = self.participantes_model.google_participantes(creds, clase["id_google"])
+        self.participantes_model.guardar_participantes(clase["id_google"], participantes)
 
-    def calcular_por_clase(self, id_clase):
-        alumnos = self.alumnos_model.obtener_alumnos(id_clase)
-        unidades = self.unidades_model.obtener_unidades(id_clase)
+        
+        alumnos = self.participantes_model.obtener_alumnos(clase["id_clase"])
+        actividades = self.actividades_model.obtener_actividades(unidad["id_unidad"])
 
         resultados = []
         for alumno in alumnos:
-            total_clase = 0
-            detalle_unidades = []
-            for unidad in unidades:
-                r = self.calcular_evaluacion(unidad["id_unidad"], alumno["id_alumno"])
-                detalle_unidades.append({"unidad": unidad["nombre"], "resultado": r})
-                total_clase += r["total"]
+            total = 0
+
+            for tipo in ["examen", "proyecto", "lista", "actividades", "extra"]:
+                peso = unidad[tipo]
+                notas_tipo = []
+
+                for act in actividades:
+                    if act["tipo"] == tipo:
+                        # Recargamos entregas directamente desde Classroom
+                        entregas = self.actividades_model.obtener_entregas(
+                            creds,
+                            clase["id_google"],   # courseId
+                            act["id_google"]      # courseworkId
+                        )
+
+                        entrega = next((e for e in entregas if e["userId"] == alumno["id_google"]), None)
+
+                        if entrega and entrega["estado"] == "RETURNED":
+                            if entrega["calificacion"] is not None:
+                                notas_tipo.append(entrega["calificacion"])
+
+
+                if notas_tipo:
+                    promedio = sum(notas_tipo) / len(notas_tipo)
+                    total += (promedio * peso / 100)
 
             resultados.append({
                 "alumno": alumno["nombre"],
-                "detalle_unidades": detalle_unidades,
-                "total_clase": round(total_clase, 2)
+                "calificacion_final": round(total, 2),
+                "estado": "Aprobado" if total >= 60 else "Reprobado"
             })
+
         return resultados
+
 
 
 class ClasesController:
@@ -83,18 +105,12 @@ class ActividadesController:
         return self.model.obtener_entregas(creds, course_id, coursework_id)
     
     def obtener_entregas_por_actividad(self, creds, id_clase, id_google_clase, coursework_id):
-    # 1. Alumnos de la BD
         alumnos = self.participantes_model.obtener_alumnos(id_clase)
-    
-        # 2. Entregas desde Classroom
         entregas = self.model.obtener_entregas(creds, id_google_clase, coursework_id)
     
         entregados = []
         no_entregados = []
         
-        print("Alumnos BD:", [(a["id_google"], a["nombre"]) for a in alumnos])
-        print("Entregas Classroom:", [(e["userId"], e["estado"]) for e in entregas])
-
     
         for alumno in alumnos:
             entrega = next((e for e in entregas if e["userId"] == alumno["id_google"]), None)

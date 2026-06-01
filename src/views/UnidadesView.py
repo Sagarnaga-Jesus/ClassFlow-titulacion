@@ -20,6 +20,10 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         page.user_data["unidad_actual"] = unidad
         page.go("/actividad")
         
+    def evaluacion_click(unidad):
+        page.user_data["unidad_actual"] = unidad
+        page.go("/evaluacion")
+        
     def eliminar(u):
         id_unidad = u["id_unidad"]
         msg = unidades_controller.elimina(id_unidad)
@@ -67,7 +71,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
                                     color=ft.Colors.BLUE_700,
                                     overlay_color=ft.Colors.BLUE_100
                                 ),
-                                on_click=lambda _: page.go("/evaluacion")
+                                on_click=lambda e, u=u: evaluacion_click(u)
                             )
 
 
@@ -130,6 +134,15 @@ def UnidadesView(page, unidades_controller, actividades_controller):
     extra = ft.TextField(label="Valor extra", keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
     resultado = ft.Text(value="", color="red")
     
+    def evaluacion_click(unidad):
+        creds = page.user_data["creds"]
+        id_google = page.user_data["clase_actual"]["id_google"]
+    
+        actividades = actividades_controller.obtener_google(creds,id_google)
+        page.user_data["actividades"]= actividades
+        page.user_data["unidad_actual"] = unidad
+        page.go("/evaluacion")
+    
     return ft.View(
         route="/unidades",
         appbar=ft.AppBar(
@@ -137,7 +150,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
             bgcolor=ft.Colors.BLUE_900,
             color="white",
             actions=[
-                ft.IconButton(ft.Icons.PEOPLE, icon_size=25, on_click=lambda _: page.go("/participantes"), tooltip="Ver participantes"),
+                ft.IconButton(ft.Icons.GROUPS_3, icon_size=25, on_click=lambda _: page.go("/participantes"), tooltip="Ver participantes"),
                 ft.IconButton(ft.Icons.WEB_STORIES, icon_size=25, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
                 ft.IconButton(ft.Icons.PERSON, icon_size=25, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
                 ],

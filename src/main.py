@@ -8,7 +8,7 @@ from views.EvaluacionView import EvaluacionView
 from views.PerfilView import PerfilView
 from views.ParticipantesView import ParticipantesView
 from controllers.UserController import AuthController
-from controllers.ApartadosController import ClasesController, UnidadesController, ActividadesController
+from controllers.ApartadosController import ClasesController, UnidadesController, ActividadesController, EvaluacionController
 from controllers.ParticipantesController import ParticipantesController
 
 def start(page: ft.Page):
@@ -24,6 +24,7 @@ def start(page: ft.Page):
     unidades = UnidadesController()
     participantes = ParticipantesController()
     actividades = ActividadesController()
+    evaluacion = EvaluacionController()
     
     def route_change(e):
         page.views.clear()
@@ -37,7 +38,7 @@ def start(page: ft.Page):
         elif page.route.startswith("/unidades"):
             page.views.append(UnidadesView(page, unidades, actividades))
         elif page.route.startswith("/evaluacion"):
-            page.views.append(EvaluacionView(page,))
+            page.views.append(EvaluacionView(page, evaluacion))
         elif page.route == ("/actividad"):
             page.views.append(ActividadesView(page,actividades))
         elif page.route.startswith("/detalles"):

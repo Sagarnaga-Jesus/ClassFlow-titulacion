@@ -23,14 +23,15 @@ CREATE TABLE IF NOT EXISTS `actividades` (
   PRIMARY KEY (`id_actividades`),
   KEY `FK_actividades_unidad` (`id_unidad`),
   CONSTRAINT `FK_actividades_unidad` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 DELETE FROM `actividades`;
 INSERT INTO `actividades` (`id_actividades`, `nombre`, `descripcion`, `tipo`, `valor`, `fecha_entrega`, `fecha_agregada`, `id_unidad`, `id_google`) VALUES
 	(4, 'Prueba 1', 'Prueba de actividad a estudiantes ', 'Actividad', 10, NULL, NULL, 31, '865886988730'),
 	(5, 'Prueba 2', 'Prueba 2 de 2 tarea', 'Actividad', 100, NULL, NULL, 31, '865990636809'),
 	(6, 'Realizar un crucigrama', 'Luis esta aburrido ', 'Actividad', 100, NULL, NULL, 32, '865999557442'),
-	(7, 'Realizar una tesis de la evaluación de la vida', 'Luis esta aburrido ', 'Proyecto', 100, NULL, NULL, 32, '865999427696');
+	(7, 'Realizar una tesis de la evaluación de la vida', 'Luis esta aburrido ', 'Proyecto', 100, NULL, NULL, 32, '865999427696'),
+	(8, 'prueba 4', NULL, 'Proyecto', 100, NULL, NULL, 31, '866092177103');
 
 CREATE TABLE IF NOT EXISTS `alumnos` (
   `id_alumno` int(11) NOT NULL AUTO_INCREMENT,
@@ -55,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `alumnos_clase` (
   PRIMARY KEY (`id_alumno_clase`),
   UNIQUE KEY `uq_alumno_clase` (`id_alumno`,`id_clase`),
   CONSTRAINT `FK__alumnos` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`id_alumno`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 DELETE FROM `alumnos_clase`;
 INSERT INTO `alumnos_clase` (`id_alumno_clase`, `id_alumno`, `id_clase`) VALUES
@@ -91,15 +92,13 @@ INSERT INTO `clase` (`id_clase`, `nombre`, `descripcion`, `id_profesor`, `id_goo
 CREATE TABLE IF NOT EXISTS `evaluacion` (
   `id_evaluacion` int(11) NOT NULL AUTO_INCREMENT,
   `id_alumno` int(11) DEFAULT NULL,
-  `id_actividad` int(11) DEFAULT NULL,
+  `id_unidad` int(11) DEFAULT NULL,
   `calificacion` varchar(50) DEFAULT NULL,
-  `autoevaluacion` varchar(50) DEFAULT NULL,
-  `entregado` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_evaluacion`),
   KEY `FK_evaluacion_alumnos` (`id_alumno`),
-  KEY `FK_evaluacion_actividades` (`id_actividad`),
-  CONSTRAINT `FK_evaluacion_actividades` FOREIGN KEY (`id_actividad`) REFERENCES `actividades` (`id_actividades`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK_evaluacion_alumnos` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`id_alumno`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  KEY `FK_evaluacion_actividades` (`id_unidad`) USING BTREE,
+  CONSTRAINT `FK_evaluacion_alumnos` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`id_alumno`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_evaluacion_unidad` FOREIGN KEY (`id_unidad`) REFERENCES `unidad` (`id_unidad`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 DELETE FROM `evaluacion`;

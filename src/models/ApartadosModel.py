@@ -5,25 +5,44 @@ class EvaluacionModel:
     def __init__(self):
         self.db = Database()
 
-    def guardar_evaluacion(self, id_alumno, id_actividad, calificacion, entregado="NO", autoevaluacion=None):
-        query = """
-            INSERT INTO evaluacion (id_alumno, id_actividad, calificacion, entregado, autoevaluacion)
-            VALUES (%s, %s, %s, %s, %s)
-        """
-        values = (id_alumno, id_actividad, calificacion, entregado, autoevaluacion)
-        self.db.execute(query, values)
-        return True, "Evaluación guardada correctamente"
+    def guardar_calificacion_unidad(self, id_alumno, id_unidad, calificacion):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("""
+                INSERT INTO evaluacion (id_alumno, id_unidad, calificacion)
+                VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE calificacion = VALUES(calificacion)
+            """, (id_alumno, id_unidad, calificacion))
+            conn.commit()
+            return True, "Calificación guardada correctamente"
+        except Exception as e:
+            print(f"Error: {e}")
+            return False, "Error al guardar calificación"
+        finally:
+            cursor.close()
+            conn.close()
 
-    def obtener_evaluaciones_por_unidad(self, id_unidad):
-        query = """
-            SELECT a.id_alumno, a.nombre, act.tipo, SUM(e.calificacion) AS puntos_obtenidos, SUM(act.valor) AS puntos_posibles
-            FROM evaluacion e
-            JOIN actividades act ON e.id_actividad = act.id_actividades
-            JOIN alumnos a ON e.id_alumno = a.id_alumno
-            WHERE act.id_unidad = %s
-            GROUP BY a.id_alumno, act.tipo
-        """
-        return self.db.fetch_all(query, (id_unidad,))
+    def obtener_calificaciones_por_clase(self, id_clase):
+        conn = self.db.get_connection()
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute("""
+                SELECT a.id_alumno, a.nombre, u.id_unidad, u.nombre AS unidad, e.calificacion
+                FROM evaluacion e
+                JOIN alumnos a ON e.id_alumno = a.id_alumno
+                JOIN unidad u ON e.id_unidad = u.id_unidad
+                WHERE u.id_clase = %s
+                ORDER BY a.id_alumno, u.id_unidad
+            """, (id_clase,))
+            resultados = cursor.fetchall()
+            return resultados
+        except Exception as e:
+            print(f"Error: {e}")
+            return []
+        finally:
+            cursor.close()
+            conn.close()
 
 
 class ClasesModel:
@@ -89,6 +108,9 @@ class UnidadesModel:
         finally:
             cursor.close()
             conn.close()
+            
+            
+            
     
     def agregar_unidad(self, id_clase, nombre, examen, proyecto, lista, actividades, extra):
         conn = self.db.get_connection()
@@ -179,6 +201,7 @@ class ActividadesModel:
         finally:
             cursor.close()
             conn.close()
+
     
     
     def obtener_entregas(self, creds, course_id, coursework_id):
@@ -187,7 +210,25 @@ class ActividadesModel:
             courseId=course_id,
             courseWorkId=coursework_id
         ).execute().get("studentSubmissions", [])
-    
-        return [{"userId": s["userId"], "estado": s["state"]} for s in submissions]
+        
+        entregas = []
+        for s in submissions:
+            calificacion = s.get("assignedGrade") or s.get("draftGrade")
+            if s["state"] == "RETURNED":
+                entregas.append({
+                    "userId": s["userId"],
+                    "estado": s["state"],
+                    "calificacion": calificacion if calificacion is not None else "Sin calificación"
+                })
+            else:
+                entregas.append({
+                    "userId": s["userId"],
+                    "estado": s["state"],
+                    "calificacion": "No entregó"
+                })
+        return entregas
+
+
+
 
 

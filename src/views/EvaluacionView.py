@@ -1,71 +1,51 @@
 import flet as ft
-from controllers.ApartadosController import EvaluacionController
 
-def EvaluacionView(page, alumnos, id_unidad):
-    controller = EvaluacionController()
+def EvaluacionView(page, evaluacion_controller):
+    clase_actual = page.user_data.get("clase_actual")
+    unidad_actual = page.user_data.get("unidad_actual")
+    creds = page.user_data.get("creds")
 
-    # 👉 AppBar
-    appbar = ft.AppBar(
-        title=ft.Text("Evaluación de Alumnos"),
-        bgcolor=ft.Colors.BLUE_900,
-        color="white",
-        actions=[
-            ft.IconButton(ft.Icons.ARROW_BACK,on_click=lambda _:page.go(f"/unidades/{id_unidad}")),
-            ft.IconButton(ft.Icons.ARROW_BACK, on_click=lambda _: page.go("/clases")),
-            ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil")),
-        ],
+    if not clase_actual or not unidad_actual:
+        page.show_snack_bar(ft.SnackBar(ft.Text("No hay clase o unidad seleccionada"), bgcolor="red"))
+        return
+
+    # Llamamos al controller para calcular resultados al vuelo
+    resultados = evaluacion_controller.calcular_por_unidad(
+        creds,
+        clase_actual,
+        unidad_actual
     )
 
-    # 👉 Construir filas dinámicas
-    rows = []
-    aprobados = 0
-    reprobados = 0
-    suma_totales = 0
-
-    for alumno in alumnos:
-        resultado = controller.calcular_evaluacion(id_unidad, alumno["id_alumno"])
-        total = resultado["total"]
-        suma_totales += total
-        if total >= 70:
-            aprobados += 1
-        else:
-            reprobados += 1
-
-        rows.append(
-            ft.DataRow(cells=[
-                ft.DataCell(ft.Text(alumno["nombre"])),
-                ft.DataCell(ft.Text(str(resultado.get("examen",0)))),
-                ft.DataCell(ft.Text(str(resultado.get("proyecto",0)))),
-                ft.DataCell(ft.Text(str(resultado.get("actividad",0)))),
-                ft.DataCell(ft.Text(f"{total}", color="green" if total>=70 else "red")),
-            ])
-        )
-
-    promedio = round(suma_totales / len(alumnos), 2) if alumnos else 0
-
-    # 👉 Tarjetas resumen
-    resumen = ft.Row(
-        controls=[
-            ft.Card(content=ft.Container(bgcolor=ft.Colors.BLUE_200,padding=10,
-                content=ft.Column([ft.Text("Promedio General", weight="bold"), ft.Text(str(promedio), size=20, weight="bold")]))),
-            ft.Card(content=ft.Container(bgcolor=ft.Colors.GREEN_200,padding=10,
-                content=ft.Column([ft.Text("Aprobados", weight="bold"), ft.Text(str(aprobados), size=20, weight="bold")]))),
-            ft.Card(content=ft.Container(bgcolor=ft.Colors.RED_200,padding=10,
-                content=ft.Column([ft.Text("Reprobados", weight="bold"), ft.Text(str(reprobados), size=20, weight="bold")]))),
-        ],
-        alignment=ft.MainAxisAlignment.SPACE_AROUND
-    )
-
-    # 👉 Tabla
+    # Construimos tabla de resultados
     tabla = ft.DataTable(
         columns=[
             ft.DataColumn(ft.Text("Alumno")),
-            ft.DataColumn(ft.Text("Examen")),
-            ft.DataColumn(ft.Text("Proyecto")),
-            ft.DataColumn(ft.Text("Actividades")),
-            ft.DataColumn(ft.Text("Total")),
+            ft.DataColumn(ft.Text("Calificación Final")),
+            ft.DataColumn(ft.Text("Estado")),
         ],
-        rows=rows
+        rows=[
+            ft.DataRow(cells=[
+                ft.DataCell(ft.Text(r["alumno"])),
+                ft.DataCell(ft.Text(str(r["calificacion_final"]))),
+                ft.DataCell(ft.Text(
+                    r["estado"],
+                    color="green" if r["estado"] == "Aprobado" else "red"
+                ))
+            ]) for r in resultados
+        ]
     )
 
-    return ft.View(route="/evaluacion", appbar=appbar, controls=[resumen, tabla])
+    return ft.View(
+        route="/evaluacion",
+        appbar=ft.AppBar(
+            title=ft.Text("Evaluación"),
+            bgcolor=ft.Colors.BLUE_900,
+            color="white",
+            actions=[
+                ft.IconButton(ft.Icons.ARROW_BACK, icon_size=25, on_click=lambda _: page.go("/unidades"), tooltip="Volver a unidades"),
+                ft.IconButton(ft.Icons.WEB_STORIES, icon_size=25, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
+                ft.IconButton(ft.Icons.PERSON, icon_size=25, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
+            ],
+        ),
+        controls=[tabla]
+    )
