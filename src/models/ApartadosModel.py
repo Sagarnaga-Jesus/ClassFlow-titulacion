@@ -5,8 +5,6 @@ class EvaluacionModel:
     def __init__(self):
         self.db = Database()
         
-        #tengo que revisar la unidad y aid del almno para que no se dupliquen los datos obteniddos
-        # que lo unico que haga sea actualizar y no crear nuevos datos
 
     def guardar_calificacion_unidad(self, id_alumno, id_unidad, calificacion):
         conn = self.db.get_connection()

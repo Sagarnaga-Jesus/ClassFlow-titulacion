@@ -15,7 +15,6 @@ def EvaluacionView(page, evaluacion_controller):
         page.update()
         return ft.View(route="/evaluacion")
 
-    # 🔥 SOLO OBTIENE DATOS (NO RECALCULA TODO)
     resultados = evaluacion_controller.calcular_por_unidad(
         creds,
         clase_actual,

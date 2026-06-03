@@ -13,6 +13,10 @@ from controllers.ParticipantesController import ParticipantesController
 
 def start(page: ft.Page):
     
+    #tengo que revisar la unidad y aid del almno para que no se dupliquen los datos obteniddos
+        # que lo unico que haga sea actualizar y no crear nuevos datos 
+        #modificar el evaluaciones view y crear o crear el exportar datos a excel
+    
     page.title = "ClassFlow"
     page.scroll = ft.ScrollMode.AUTO
     page.theme_mode = ft.ThemeMode.LIGHT
