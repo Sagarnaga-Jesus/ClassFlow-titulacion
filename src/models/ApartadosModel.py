@@ -5,29 +5,45 @@ class EvaluacionModel:
     def __init__(self):
         self.db = Database()
         
-
     def guardar_calificacion_unidad(self, id_alumno, id_unidad, calificacion):
         conn = self.db.get_connection()
         cursor = conn.cursor()
-
+    
         try:
             cursor.execute("""
-                INSERT INTO evaluacion (id_alumno, id_unidad, calificacion)
-                VALUES (%s, %s, %s)
-                ON DUPLICATE KEY UPDATE calificacion = VALUES(calificacion)
-            """, (id_alumno, id_unidad, float(calificacion)))
-
+                SELECT id_evaluacion
+                FROM evaluacion
+                WHERE id_alumno = %s AND id_unidad = %s
+            """, (id_alumno, id_unidad))
+    
+            existe = cursor.fetchone()
+    
+            if existe:
+                cursor.execute("""
+                    UPDATE evaluacion
+                    SET calificacion = %s
+                    WHERE id_alumno = %s
+                    AND id_unidad = %s
+                """, (float(calificacion), id_alumno, id_unidad))
+            else:
+                cursor.execute("""
+                    INSERT INTO evaluacion
+                    (id_alumno, id_unidad, calificacion)
+                    VALUES (%s, %s, %s)
+                """, (id_alumno, id_unidad, float(calificacion)))
+    
             conn.commit()
-            return True, "OK"
-
+    
+            return True, "Calificación guardada correctamente"
+    
         except Exception as e:
+            conn.rollback()
             print("ERROR:", e)
             return False, str(e)
-
+    
         finally:
             cursor.close()
             conn.close()
-
     def obtener_calificaciones_por_clase(self, id_clase):
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
