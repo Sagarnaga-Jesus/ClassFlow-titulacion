@@ -8,17 +8,21 @@ class EvaluacionModel:
     def guardar_calificacion_unidad(self, id_alumno, id_unidad, calificacion):
         conn = self.db.get_connection()
         cursor = conn.cursor()
+
         try:
             cursor.execute("""
                 INSERT INTO evaluacion (id_alumno, id_unidad, calificacion)
                 VALUES (%s, %s, %s)
                 ON DUPLICATE KEY UPDATE calificacion = VALUES(calificacion)
-            """, (id_alumno, id_unidad, calificacion))
+            """, (id_alumno, id_unidad, float(calificacion)))
+
             conn.commit()
-            return True, "Calificación guardada correctamente"
+            return True, "OK"
+
         except Exception as e:
-            print(f"Error: {e}")
-            return False, "Error al guardar calificación"
+            print("ERROR:", e)
+            return False, str(e)
+
         finally:
             cursor.close()
             conn.close()
@@ -26,20 +30,28 @@ class EvaluacionModel:
     def obtener_calificaciones_por_clase(self, id_clase):
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
+
         try:
             cursor.execute("""
-                SELECT a.id_alumno, a.nombre, u.id_unidad, u.nombre AS unidad, e.calificacion
+                SELECT 
+                    a.id_alumno,
+                    a.nombre,
+                    u.id_unidad,
+                    u.nombre AS unidad,
+                    e.calificacion
                 FROM evaluacion e
                 JOIN alumnos a ON e.id_alumno = a.id_alumno
                 JOIN unidad u ON e.id_unidad = u.id_unidad
                 WHERE u.id_clase = %s
                 ORDER BY a.id_alumno, u.id_unidad
             """, (id_clase,))
-            resultados = cursor.fetchall()
-            return resultados
+
+            return cursor.fetchall()
+
         except Exception as e:
-            print(f"Error: {e}")
+            print("ERROR:", e)
             return []
+
         finally:
             cursor.close()
             conn.close()

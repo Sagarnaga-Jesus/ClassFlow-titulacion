@@ -5,53 +5,72 @@ class EvaluacionController:
     def __init__(self):
         self.model = EvaluacionModel()
         self.participantes_model = ParticipantesModel()
-        self.unidades_model = UnidadesModel()
         self.actividades_model = ActividadesModel()
-        
-    def calcular_por_unidad(self, creds, clase, unidad):
-        participantes = self.participantes_model.google_participantes(creds, clase["id_google"])
-        self.participantes_model.guardar_participantes(clase["id_google"], participantes)
 
-        
+    def calcular_por_unidad(self, creds, clase, unidad):
+
         alumnos = self.participantes_model.obtener_alumnos(clase["id_clase"])
         actividades = self.actividades_model.obtener_actividades(unidad["id_unidad"])
 
         resultados = []
+
         for alumno in alumnos:
             total = 0
-
+        
             for tipo in ["examen", "proyecto", "lista", "actividades", "extra"]:
                 peso = unidad[tipo]
                 notas_tipo = []
-
+        
                 for act in actividades:
-                    if act["tipo"] == tipo:
-                        # Recargamos entregas directamente desde Classroom
-                        entregas = self.actividades_model.obtener_entregas(
-                            creds,
-                            clase["id_google"],   # courseId
-                            act["id_google"]      # courseworkId
-                        )
-
-                        entrega = next((e for e in entregas if e["userId"] == alumno["id_google"]), None)
-
-                        if entrega and entrega["estado"] == "RETURNED":
-                            if entrega["calificacion"] is not None:
-                                notas_tipo.append(entrega["calificacion"])
-
-
+                    if str(act["tipo"]).lower() == tipo.lower():
+                        continue
+        
+                    entregas = self.actividades_model.obtener_entregas(
+                        creds,
+                        clase["id_google"],
+                        act["id_google"]
+                    )
+        
+                    entrega = next(
+                        (e for e in entregas if str(e["userId"]) == str(alumno["id_google"])),
+                        None
+                    )
+        
+                    if entrega:
+                        nota = (
+                        entrega.get("assignedGrade")
+                        or entrega.get("draftGrade")
+                        or entrega.get("calificacion")
+                    )
+        
+                        if nota is not None:
+                            try:
+                                nota_float = float(nota)
+                                notas_tipo.append(nota_float)
+                        
+                            except ValueError:
+                                print("IGNORADO (no numérico):", nota)
+        
                 if notas_tipo:
                     promedio = sum(notas_tipo) / len(notas_tipo)
-                    total += (promedio * peso / 100)
-
+                    total += promedio * (peso / 100)
+        
+            final = round(total, 2)
+        
+            # 🔥 AQUÍ SE GUARDA EN BD
+            self.model.guardar_calificacion_unidad(
+                alumno["id_alumno"],
+                unidad["id_unidad"],
+                final
+            )
+        
             resultados.append({
                 "alumno": alumno["nombre"],
-                "calificacion_final": round(total, 2),
-                "estado": "Aprobado" if total >= 60 else "Reprobado"
+                "calificacion_final": final,
+                "estado": "Aprobado" if final >= 60 else "Reprobado"
             })
 
         return resultados
-
 
 
 class ClasesController:
