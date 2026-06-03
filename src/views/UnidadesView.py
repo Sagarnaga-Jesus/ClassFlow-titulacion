@@ -46,6 +46,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
                     bgcolor=ft.Colors.WHITE,
                     shadow_color=ft.Colors.BLUE_700,
                     elevation=10,
+                    expand=True,
                     shape=ft.RoundedRectangleBorder(radius=12),
                     content=ft.Container(
                         padding=10,
@@ -126,12 +127,12 @@ def UnidadesView(page, unidades_controller, actividades_controller):
 
     
 
-    agregar_unidad = ft.IconButton(ft.Icons.ADD_BOX, on_click=agregar, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)), icon_size=40, tooltip="Agregar unidad")
-    examen = ft.TextField(label="Valor examen", keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
-    proyecto = ft.TextField(label="Valor proyecto", keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
-    lista = ft.TextField(label="Valor lista (asistencia)", keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
-    actividades = ft.TextField(label="Valor actividades", keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
-    extra = ft.TextField(label="Valor extra", keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
+    agregar_unidad = ft.IconButton(ft.Icons.ADD_BOX, expand=True, on_click=agregar, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)), icon_size=40, tooltip="Agregar unidad")
+    examen = ft.TextField(label="Valor examen", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
+    proyecto = ft.TextField(label="Valor proyecto", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
+    lista = ft.TextField(label="Valor lista (asistencia)", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
+    actividades = ft.TextField(label="Valor actividades", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
+    extra = ft.TextField(label="Valor extra", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
     resultado = ft.Text(value="", color="red")
     
     def evaluacion_click(unidad):
@@ -158,6 +159,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         
         controls=[
             ft.Container(
+                expand=True,
                 padding=20,
                 content=ft.Row([
                     ft.Column([

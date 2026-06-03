@@ -9,7 +9,7 @@ def ClasesView(page, clases_controller, unidades_controller):
     
     select_clases = ft.Dropdown(
         label="Selecciona una clase de Classroom",
-        width=400,
+        width=350,
         options=[
             ft.dropdown.Option(
                 key=c["id"],
@@ -116,7 +116,7 @@ def ClasesView(page, clases_controller, unidades_controller):
         ),
         controls=[
             ft.Container(
-                ft.Row([select_clases, agregar_clase], spacing=20),
+                ft.Row([select_clases, agregar_clase], alignment=ft.MainAxisAlignment.CENTER, spacing=20),
             ),
             ft.Divider(),
             lista_clases

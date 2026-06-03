@@ -23,14 +23,18 @@ def DetallesView(page, actividades_controller):
         ft.Text(f"Valor: {actividad.get('valor', 'N/A')}"),
         ft.Text(f"Fecha entrega: {actividad.get('fecha_entrega', 'N/A')}")
     ], spacing=10)
+    
+    num_entregados = len(entregados)
+    
+    num_noentre = len(no_entregados)
 
     lista_entregados = ft.ExpansionTile(
-        title=ft.Text("Entregaron"),
+        title=ft.Text(f"Entregaron:  {num_entregados}"),
         controls=[ft.ListTile(title=ft.Text(a["nombre"]), subtitle=ft.Text(a["correo"])) for a in entregados]
     )
 
     lista_no_entregados = ft.ExpansionTile(
-        title=ft.Text("No entregaron"),
+        title=ft.Text(f"No entregaron:  {num_noentre}"),
         controls=[ft.ListTile(title=ft.Text(a["nombre"]), subtitle=ft.Text(a["correo"])) for a in no_entregados]
     )
 
