@@ -8,74 +8,86 @@ class EvaluacionController:
         self.actividades_model = ActividadesModel()
 
     def calcular_por_unidad(self, creds, clase, unidad):
-
         alumnos = self.participantes_model.obtener_alumnos(clase["id_clase"])
         actividades = self.actividades_model.obtener_actividades(unidad["id_unidad"])
-
+    
         resultados = []
-
+    
         for alumno in alumnos:
             total = 0
-        
+            detalle = {
+                "examen": 0,
+                "proyecto": 0,
+                "lista": 0,
+                "actividades": 0,
+                "extra": 0
+            }
+    
             for tipo in ["examen", "proyecto", "lista", "actividades", "extra"]:
-                peso = unidad[tipo]
                 notas_tipo = []
-        
+    
                 for act in actividades:
-                    if str(act["tipo"]).lower() == tipo.lower():
+                    tipo_act = str(act["tipo"]).strip().lower()
+                    if tipo_act == "actividad":
+                        tipo_act = "actividades"
+    
+                    if tipo_act != tipo:
                         continue
-        
+    
                     entregas = self.actividades_model.obtener_entregas(
                         creds,
                         clase["id_google"],
                         act["id_google"]
                     )
-        
+    
                     entrega = next(
                         (e for e in entregas if str(e["userId"]) == str(alumno["id_google"])),
                         None
                     )
-        
+    
                     if entrega:
                         nota = (
-                        entrega.get("assignedGrade")
-                        or entrega.get("draftGrade")
-                        or entrega.get("calificacion")
-                    )
-        
+                            entrega.get("assignedGrade")
+                            or entrega.get("draftGrade")
+                            or entrega.get("calificacion")
+                        )
+    
                         if nota is not None:
                             try:
-                                nota_float = float(nota)
-                                notas_tipo.append(nota_float)
-                        
+                                notas_tipo.append(float(nota))
                             except ValueError:
                                 print("IGNORADO (no numérico):", nota)
-        
+    
                 if notas_tipo:
                     promedio = sum(notas_tipo) / len(notas_tipo)
-                    total += promedio * (peso / 100)
-        
+                    detalle[tipo] = round(promedio, 2)
+                    total += promedio
+    
             final = round(total, 2)
-        
-            # 🔥 AQUÍ SE GUARDA EN BD
             self.model.guardar_calificacion_unidad(
                 alumno["id_alumno"],
                 unidad["id_unidad"],
                 final
             )
-        
+    
             resultados.append({
                 "alumno": alumno["nombre"],
+                "examen": detalle["examen"],
+                "proyecto": detalle["proyecto"],
+                "lista": detalle["lista"],
+                "actividades": detalle["actividades"],
+                "extra": detalle["extra"],
                 "calificacion_final": final,
-                "estado": "Aprobado" if final >= 60 else "Reprobado"
             })
-
+    
         return resultados
+    
 
 
 class ClasesController:
     def __init__(self):
         self.model = ClasesModel()
+        self.actividades_model = ActividadesModel()
         
     def obtener_clases(self, id_profesor):
         return self.model.obtener_clases(id_profesor)
@@ -93,6 +105,7 @@ class ClasesController:
     
     def eliminar_clase(self, id_clase):
         return self.model.eliminar(id_clase)
+
 
 class UnidadesController:
     def __init__(self):

@@ -73,7 +73,6 @@ class EvaluacionModel:
             cursor.close()
             conn.close()
 
-
 class ClasesModel:
     def __init__(self):
         self.db = Database()
@@ -178,6 +177,7 @@ class ActividadesModel:
                 ).execute()
 
                 for a in response.get("courseWork", []):
+                    
                     actividades.append({
                         "id_google": a["id"],
                         "titulo": a["title"],
@@ -215,8 +215,8 @@ class ActividadesModel:
         cursor.close()
         conn.close()
         return True, "Actividad agregada correctamente"
+        
     
-
     def obtener_actividades(self, id_unidad):
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -233,28 +233,25 @@ class ActividadesModel:
 
     
     
+    
     def obtener_entregas(self, creds, course_id, coursework_id):
         service = build("classroom", "v1", credentials=creds)
-        submissions = service.courses().courseWork().studentSubmissions().list(
+    
+        response = service.courses().courseWork().studentSubmissions().list(
             courseId=course_id,
             courseWorkId=coursework_id
-        ).execute().get("studentSubmissions", [])
-        
+        ).execute()
+    
+        submissions = response.get("studentSubmissions", [])
+    
         entregas = []
         for s in submissions:
-            calificacion = s.get("assignedGrade") or s.get("draftGrade")
-            if s["state"] == "RETURNED":
-                entregas.append({
-                    "userId": s["userId"],
-                    "estado": s["state"],
-                    "calificacion": calificacion if calificacion is not None else "Sin calificación"
-                })
-            else:
-                entregas.append({
-                    "userId": s["userId"],
-                    "estado": s["state"],
-                    "calificacion": "No entregó"
-                })
+            entregas.append({
+                "userId": s.get("userId"),
+                "estado": s.get("state"),
+                "calificacion": s.get("assignedGrade", s.get("draftGrade", 0))
+            })
+    
         return entregas
 
 

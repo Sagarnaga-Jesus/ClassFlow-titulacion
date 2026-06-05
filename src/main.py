@@ -13,7 +13,7 @@ from controllers.ParticipantesController import ParticipantesController
 
 def start(page: ft.Page):
     
-    #tengo que revisar la unidad y aid del almno para que no se dupliquen los datos obteniddos
+    #tengo que revisar la unidad y aid del alumno para que no se dupliquen los datos obtenidos
         # que lo unico que haga sea actualizar y no crear nuevos datos 
         #modificar el evaluaciones view y crear o crear el exportar datos a excel
     

@@ -22,7 +22,26 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         
     def evaluacion_click(unidad):
         page.user_data["unidad_actual"] = unidad
+    
+        loading_view = ft.View(
+            route="/evaluacion",
+            controls=[
+                ft.Column(
+                    [
+                        ft.Text("Procesando información...", size=20),
+                        ft.ProgressRing(width=50, height=50, stroke_width=5),
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    expand=True
+                )
+            ]
+        )
+    
+        page.views.append(loading_view)
         page.go("/evaluacion")
+        page.update()
+
         
     def eliminar(u):
         id_unidad = u["id_unidad"]
