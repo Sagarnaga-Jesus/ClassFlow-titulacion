@@ -154,6 +154,18 @@ class UnidadesModel:
         conn.commit()
         conn.close()
         return "unidad eliminada"
+    def actualizar_unidad(self, id_unidad, datos):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+    
+        query = """UPDATE unidad SET nombre = %s, examen = %s, proyecto = %s, lista = %s, actividades = %s, extra = %s WHERE id_unidad = %s """
+    
+        cursor.execute(query, (datos["nombre"],datos["examen"],datos["proyecto"],datos["lista"],datos["actividades"],datos["extra"],id_unidad ))
+    
+        conn.commit()
+        conn.close()
+    
+        return True, "Unidad actualizada correctamente"
 
 class ActividadesModel:
     

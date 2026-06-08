@@ -180,6 +180,40 @@ class UnidadesController:
     
     def elimina(self, id_unidad):
         return self.model.eliminar_unidad(id_unidad)
+    
+    def actualizar_unidad(self, id_unidad, datos):
+
+        try:
+            # Validación básica
+            campos_obligatorios = ["nombre", "examen", "proyecto", "lista", "actividades", "extra"]
+    
+            for c in campos_obligatorios:
+                if c not in datos or datos[c] == "":
+                    return False, f"Falta el campo {c}"
+    
+            # Validar suma 100
+            total = (
+                int(datos["examen"]) +
+                int(datos["proyecto"]) +
+                int(datos["lista"]) +
+                int(datos["actividades"]) +
+                int(datos["extra"])
+            )
+    
+            if total != 100:
+                return False, f"La suma debe ser 100, actualmente es {total}"
+    
+            # Llamar al model
+            success, msg = self.model.actualizar_unidad(id_unidad, datos)
+    
+            if success:
+                return True, msg
+    
+            return False, "Error al actualizar unidad"
+    
+        except Exception as e:
+            return False, str(e)
+    
 
 class ActividadesController:
     def __init__(self):

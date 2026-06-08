@@ -68,6 +68,7 @@ def EvaluacionView(page, evaluacion_controller, exportar_controller):
                 clase,
                 unidad_actual
             )
+            
             def exportar(e):
                 archivo, msg = exportar_controller.exportar_evaluaciones(resultados)
             

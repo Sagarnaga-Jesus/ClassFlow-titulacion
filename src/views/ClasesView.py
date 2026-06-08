@@ -18,7 +18,7 @@ def ClasesView(page, clases_controller):
         ]
     )
     
-    lista_clases = ft.GridView(expand=True,max_extent=250,child_aspect_ratio=2,spacing=20,run_spacing=20)
+    lista_clases = ft.GridView(expand=True,max_extent=300,child_aspect_ratio=2,spacing=20,run_spacing=20)
     
     def agregar(e):
         if not select_clases.value:

@@ -71,7 +71,7 @@ def AsistenciaView(page, asistencia_controller, participantes_controller):
 
         if not alumnos.value:
 
-            page.snack_bar = ft.SnackBar(content=ft.Text("Selecciona un alumno"),bgcolor=ft.Colors.RED)
+            page.snack_bar = ft.SnackBar(content=ft.Text("Selecciona un alumno"),bgcolor=ft.Colors.RED, color=ft.Colors.WHITE)
 
             page.snack_bar.open = True
             page.update()
