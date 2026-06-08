@@ -11,7 +11,7 @@ def ActividadesView(page, actividades_controller):
 
     lista_actividades = ft.GridView(
         expand=True,
-        max_extent=350,
+        max_extent=400,
         child_aspect_ratio=2,
         spacing=20,
         run_spacing=20
@@ -79,6 +79,16 @@ def ActividadesView(page, actividades_controller):
         page.user_data["actividad_actual"] = actividad
         page.user_data["entregas"] = entregas
         page.go("/detalles")
+        
+    def eliminar(c):
+        succens,msg=actividades_controller.eliminar_actividades(c)
+        if succens:
+            cargar_actividades()
+            page.show_dialog(ft.SnackBar(ft.Text(msg)))
+        else:
+            page.show_dialog(ft.SnackBar(ft.Text("Hubo un error al eliminar")))
+        
+        page.update()
 
 
 
@@ -90,17 +100,27 @@ def ActividadesView(page, actividades_controller):
                 ft.Card(
                     content=ft.Container(
                         padding=15,
+                        on_click=lambda e, a=act: actividad_click(e, a),
+                        expand=True,
                         content=ft.Column([
-                            ft.Text(act["nombre"], size=18, weight="bold", color="Green"),
-                            ft.Text(act.get("descripcion", "Sin descripción"), size=14, color=ft.Colors.GREY),
-                        ]),
-                        on_click=lambda e, a=act: actividad_click(e, a)
-                    ),
+                                ft.Row([
+                                    ft.Text(act["nombre"], size=22, weight="bold", color=ft.Colors.BLUE_700, expand=True),
+                                    ft.IconButton(
+                                        ft.Icons.DELETE,
+                                        tooltip="Eliminar Actividad",
+                                        on_click=lambda e, c=act: eliminar(c)
+                                    )
+                                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                                ft.Text(act["descripcion"], size=18, color=ft.Colors.BLUE_GREY_400),
+                            ], alignment=ft.MainAxisAlignment.START)
+                        
+                        ),
                     elevation=5,
                     margin=10,
                     shape=ft.RoundedRectangleBorder(radius=12),
+                    ),
+                    
                 )
-            )
         page.update()
 
 
@@ -113,6 +133,7 @@ def ActividadesView(page, actividades_controller):
         bgcolor=ft.Colors.GREEN,
         foreground_color=ft.Colors.WHITE
     )
+    
 
     return ft.View(
         route="/actividad",
@@ -122,6 +143,7 @@ def ActividadesView(page, actividades_controller):
             color="white",
             actions=[
                 ft.IconButton(ft.Icons.ARROW_BACK,on_click=lambda _:page.go(f"/unidades/{clase.get("id_clase","")}")),
+                ft.IconButton(ft.Icons.GROUPS_3, icon_size=25, on_click=lambda _: page.go("/participantes"), tooltip="Ver participantes"),
                 ft.IconButton(ft.Icons.WEB_STORIES, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
                 ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
             ],

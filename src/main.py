@@ -7,21 +7,20 @@ from views.DetallesView import DetallesView
 from views.EvaluacionView import EvaluacionView
 from views.PerfilView import PerfilView
 from views.ParticipantesView import ParticipantesView
+from views.AsistenciaView import AsistenciaView
+from controllers.AsistenciaController import AsistenciaController
+from controllers.ExportarController import ExportarController
 from controllers.UserController import AuthController
 from controllers.ApartadosController import ClasesController, UnidadesController, ActividadesController, EvaluacionController
 from controllers.ParticipantesController import ParticipantesController
 
 def start(page: ft.Page):
     
-    #tengo que revisar la unidad y aid del alumno para que no se dupliquen los datos obtenidos
-        # que lo unico que haga sea actualizar y no crear nuevos datos 
-        #modificar el evaluaciones view y crear o crear el exportar datos a excel
-    
     page.title = "ClassFlow"
     page.scroll = ft.ScrollMode.AUTO
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.window_width = 500
-    page.window_height = 800
+    page.window_width = 750
+    page.window_height = 900
     
     auth = AuthController()
     clases = ClasesController()
@@ -29,27 +28,30 @@ def start(page: ft.Page):
     participantes = ParticipantesController()
     actividades = ActividadesController()
     evaluacion = EvaluacionController()
-    
+    asistencia = AsistenciaController()
+    exportar = ExportarController()
     def route_change(e):
         page.views.clear()
         
         if page.route == "/":
             page.views.append(LoginView(page,auth))
         elif page.route == "/clases":
-            page.views.append(ClasesView(page, clases, unidades))
+            page.views.append(ClasesView(page, clases))
         elif page.route == "/perfil":
             page.views.append(PerfilView(page))
         elif page.route.startswith("/unidades"):
             page.views.append(UnidadesView(page, unidades, actividades))
         elif page.route.startswith("/evaluacion"):
-            page.views.append(EvaluacionView(page, evaluacion))
+            page.views.append(EvaluacionView(page, evaluacion, exportar))
         elif page.route == ("/actividad"):
             page.views.append(ActividadesView(page,actividades))
         elif page.route.startswith("/detalles"):
             page.views.append(DetallesView(page,actividades))
         elif page.route == ("/participantes"):
             page.views.append(ParticipantesView(page, participantes, clases))
-            
+        elif page.route == ("/asistencia"):
+            page.views.append(AsistenciaView(page, asistencia, participantes))
+
         page.update()
 
     def view_pop(e):

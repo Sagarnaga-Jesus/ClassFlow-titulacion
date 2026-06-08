@@ -9,7 +9,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         return
         
     nombre = ft.TextField(label="Nombre de la unidad", icon=ft.Icons.TITLE)
-    lista_unidades = ft.GridView(expand=True, max_extent=350, child_aspect_ratio=1.2, spacing=20, run_spacing=20)
+    lista_unidades = ft.GridView(expand=True, max_extent=400, child_aspect_ratio=1.2, spacing=20, run_spacing=20)
     
     def actividad_click(unidad):
         creds = page.user_data["creds"]
@@ -22,25 +22,12 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         
     def evaluacion_click(unidad):
         page.user_data["unidad_actual"] = unidad
-    
-        loading_view = ft.View(
-            route="/evaluacion",
-            controls=[
-                ft.Column(
-                    [
-                        ft.Text("Procesando información...", size=20),
-                        ft.ProgressRing(width=50, height=50, stroke_width=5),
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    expand=True
-                )
-            ]
-        )
-    
-        page.views.append(loading_view)
         page.go("/evaluacion")
         page.update()
+    
+    def asistencia_click(unidad):
+        page.user_data["unidad_actual"] = unidad
+        page.go("/asistencia")
 
         
     def eliminar(u):
@@ -61,7 +48,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
             lista_unidades.controls.append(
                 ft.Card(
                     width=500,
-                    height=600,
+                    height=550,
                     bgcolor=ft.Colors.WHITE,
                     shadow_color=ft.Colors.BLUE_700,
                     elevation=10,
@@ -84,15 +71,9 @@ def UnidadesView(page, unidades_controller, actividades_controller):
                             ft.Text("Valores", size=16, weight="bold", color="green"),
                             ft.Text(f"Actividades: {u["actividades"]}\n Proyecto: {u["proyecto"]} \n Examen: {u["examen"]}\n Asistencia: {u["lista"]}\n Extra: {u["extra"]}", size=14,),
                             
-                            ft.TextButton(
-                                "Ir a Evaluaciones",
-                                icon=ft.Icons.BAR_CHART,
-                                style=ft.ButtonStyle(
-                                    color=ft.Colors.BLUE_700,
-                                    overlay_color=ft.Colors.BLUE_100
-                                ),
-                                on_click=lambda e, u=u: evaluacion_click(u)
-                            )
+                            
+                            ft.TextButton("Inasistencias",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color=ft.Colors.BLUE_700, overlay_color=ft.Colors.BLUE_100),on_click=lambda e, u=u: asistencia_click(u)),
+                            ft.TextButton("Ir a Evaluaciones",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color=ft.Colors.BLUE_700, overlay_color=ft.Colors.BLUE_100),on_click=lambda e, u=u: evaluacion_click(u)),
 
 
                             

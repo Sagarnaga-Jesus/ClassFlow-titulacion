@@ -1,7 +1,6 @@
 import flet as ft
-from controllers.ParticipantesController import ParticipantesController
 
-def ClasesView(page, clases_controller, unidades_controller):
+def ClasesView(page, clases_controller):
     
     data = page.user_data
     user = data["usuario"]
@@ -19,14 +18,7 @@ def ClasesView(page, clases_controller, unidades_controller):
         ]
     )
     
-    lista_clases = ft.GridView(
-    expand=True,
-    max_extent=250,
-    child_aspect_ratio=2,
-    spacing=20,
-    run_spacing=20
-    )
-
+    lista_clases = ft.GridView(expand=True,max_extent=250,child_aspect_ratio=2,spacing=20,run_spacing=20)
     
     def agregar(e):
         if not select_clases.value:

@@ -137,9 +137,6 @@ class UnidadesModel:
             cursor.close()
             conn.close()
             
-            
-            
-    
     def agregar_unidad(self, id_clase, nombre, examen, proyecto, lista, actividades, extra):
         conn = self.db.get_connection()
         cursor = conn.cursor()
@@ -157,7 +154,6 @@ class UnidadesModel:
         conn.commit()
         conn.close()
         return "unidad eliminada"
-    
 
 class ActividadesModel:
     
@@ -230,9 +226,6 @@ class ActividadesModel:
         finally:
             cursor.close()
             conn.close()
-
-    
-    
     
     def obtener_entregas(self, creds, course_id, coursework_id):
         service = build("classroom", "v1", credentials=creds)
@@ -253,7 +246,32 @@ class ActividadesModel:
             })
     
         return entregas
-
+    
+    def eliminar_actividad(self, actividad):
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+    
+        try:
+            id_actividad = actividad.get("id_actividades")
+    
+            if not id_actividad:
+                return False
+    
+            cursor.execute(
+                "DELETE FROM actividades WHERE id_actividades = %s",
+                (id_actividad,)
+            )
+    
+            conn.commit()
+    
+            return cursor.rowcount > 0
+    
+        except Exception as e:
+            print("Error al eliminar actividad:", e)
+            return False
+    
+        finally:
+            conn.close()
 
 
 
