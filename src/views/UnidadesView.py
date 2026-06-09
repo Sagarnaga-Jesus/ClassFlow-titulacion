@@ -1,4 +1,5 @@
 import flet as ft
+import asyncio
 
 def UnidadesView(page, unidades_controller, actividades_controller):
     
@@ -112,6 +113,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         page.update()
     
     async def cargar_unidades_vista():
+        await asyncio.sleep(1.5)
         clase = page.user_data.get("clase_actual")
         
         if not clase:
@@ -278,14 +280,13 @@ def UnidadesView(page, unidades_controller, actividades_controller):
                                 
                             ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
                             resultado,
-                            ft.Row([
-                                actividades,
-                                proyecto,
-                                examen,
-                                lista,
-                                extra,
-                                
-                                ]),
+                            ft.ResponsiveRow([
+    ft.Column([actividades], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
+    ft.Column([proyecto], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
+    ft.Column([examen], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
+    ft.Column([lista], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
+    ft.Column([extra], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
+])
                                 
                         ],alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER,),
                         

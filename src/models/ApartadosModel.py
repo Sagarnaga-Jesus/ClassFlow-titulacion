@@ -154,6 +154,7 @@ class UnidadesModel:
         conn.commit()
         conn.close()
         return "unidad eliminada"
+    
     def actualizar_unidad(self, id_unidad, datos):
         conn = self.db.get_connection()
         cursor = conn.cursor()

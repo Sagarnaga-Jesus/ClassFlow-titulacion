@@ -44,6 +44,7 @@ def DetallesView(page, actividades_controller):
         page.run_task(cargar_detalles)
     
     async def cargar_detalles():
+        
     
         unidad = page.user_data.get("unidad_actual")
         actividad = page.user_data.get("actividad_actual")

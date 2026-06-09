@@ -1,6 +1,9 @@
 import flet as ft
+import asyncio
+
 def ActividadesView(page, actividades_controller):
     clase = page.user_data.get("clase_actual")
+    
     vista = ft.View(
             route="/actividad",
             appbar=ft.AppBar(
@@ -14,10 +17,32 @@ def ActividadesView(page, actividades_controller):
                     ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
                 ],
             ),
-            
+            controls=[
+                ft.Container(
+                    content=ft.Column(
+                        [
+                            ft.Text(
+                                "Cargando actividades...",
+                                size=20,
+                                weight=ft.FontWeight.BOLD
+                            ),
+                            ft.ProgressRing(
+                                width=50,
+                                height=50,
+                                stroke_width=5
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    ),
+                    expand=True,
+                )
+            ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER
         )
     
-    async def cargar_actividades():
+    async def cargar_actividades_async():
+        await asyncio.sleep(2)
         
         actividad = page.user_data.get("actividades", [])
         unidad = page.user_data.get("unidad_actual")
@@ -162,5 +187,5 @@ def ActividadesView(page, actividades_controller):
 
         page.update()
         
-    page.run_task(cargar_actividades)
+    page.run_task(cargar_actividades_async)
     return vista

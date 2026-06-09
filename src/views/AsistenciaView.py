@@ -104,7 +104,7 @@ def AsistenciaView(page, asistencia_controller, participantes_controller):
             page.snack_bar.open = True
             page.update()
 
-    guardar_btn = ft.ElevatedButton("Guardar faltas", on_click=guardar_asistencia, width=150, bgcolor=ft.Colors.GREEN_700)
+    guardar_btn = ft.ElevatedButton("Guardar faltas", on_click=guardar_asistencia, width=150, bgcolor=ft.Colors.GREEN_700, color=ft.Colors.WHITE)
 
     cargar_asistencias()
 
