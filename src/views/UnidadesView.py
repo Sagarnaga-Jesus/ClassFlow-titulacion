@@ -1,7 +1,7 @@
 import flet as ft
 import asyncio
 
-def UnidadesView(page, unidades_controller, actividades_controller):
+def UnidadesView(page, unidades_controller, actividades_controller, participantes_controller):
     
     vista = ft.View(
         route="/unidades",
@@ -133,6 +133,8 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         def actividad_click(unidad):
             creds = page.user_data["creds"]
             id_google = page.user_data["clase_actual"]["id_google"]
+            
+            participantes_controller.obtener_google(creds, id_google)
         
             actividades = actividades_controller.obtener_google(creds,id_google)
             page.user_data["actividades"]= actividades
@@ -162,6 +164,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         def cargar_unidades():
             lista_unidades.controls.clear()
             unidades = unidades_controller.obtener_unidades(clase['id_clase'])
+            
     
             for u in unidades:
                 lista_unidades.controls.append(

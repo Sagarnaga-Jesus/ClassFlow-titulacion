@@ -22,14 +22,10 @@ dependencies = [
 
 [project.scripts]
 
-#aqui definimos el comando corto
-#quitamos el src porque definimos "src" como la raiz
-
 app="main:main"
 
 [tool.uv]
 package = true
 
-#Esta secion es crucial para que python vea el ontenido de src como el nivel raiz 
 [tool.setuptools.package-dir]
 "" = "src"

@@ -87,10 +87,12 @@ def AsistenciaView(page, asistencia_controller, participantes_controller):
             asistencias_maximas = int(campo_asistencias_maximas.value or 0)
 
             success, message = (asistencia_controller.guardar_asistencia(id_alumno,id_unidad,faltas,asistencias_maximas))
-
-            page.show_dialog(content=ft.Text(message),bgcolor=( ft.Colors.GREEN if success else ft.Colors.RED))
-
-
+            
+            if success:
+                page.show_dialog(ft.SnackBar(ft.Text(message),bgcolor=(ft.Colors.GREEN )))
+            else:
+                page.show_dialog(ft.SnackBar(ft.Text(message),bgcolor=(ft.Colors.RED)))
+                
             if success:
                 cargar_asistencias()
 

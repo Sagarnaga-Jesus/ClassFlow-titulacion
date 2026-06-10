@@ -64,17 +64,15 @@ def DetallesView(page, actividades_controller):
     
         detalle = ft.Row([
             ft.Column([
-                ft.Text(actividad["nombre"], size=25, weight="bold"),]),
-            ft.Column([
-                ft.Text(actividad.get("descripcion", "Sin descripción"), size=16),
+                ft.Text(actividad["nombre"], size=20, weight="bold", expand=True),ft.Text(actividad.get("descripcion", "Sin descripción", ),expand=True ,size=16),]),
+            
+            ft.Column([ft.Text(f"Valor: {actividad.get('valor', 'N/A')}", expand=True),
                 ]),
-            ft.Column([ft.Text(f"Valor: {actividad.get('valor', 'N/A')}"),
+            ft.Column([ft.Text(f"Fecha entrega: {actividad.get('fecha_entrega', 'N/A')}", expand=True),
                 ]),
-            ft.Column([ft.Text(f"Fecha entrega: {actividad.get('fecha_entrega', 'N/A')}"),
-                ]),
-            ft.Column([ft.IconButton(icon=ft.Icons.REFRESH,tooltip="Actualizar",icon_size=30,on_click=lambda e: recargar(),icon_color=ft.Colors.GREEN),
+            ft.Column([ft.IconButton(icon=ft.Icons.REFRESH,tooltip="Actualizar",icon_size=30,on_click=lambda e: recargar(),icon_color=ft.Colors.GREEN, expand=True),
             ]),
-        ],alignment=ft.MainAxisAlignment.CENTER, spacing=20)
+        ],alignment=ft.MainAxisAlignment.CENTER, spacing=15)
         
         num_entregados = len(entregados)
         
@@ -97,6 +95,7 @@ def DetallesView(page, actividades_controller):
         
         vista.controls.extend([
                 detalle,
+                ft.Divider(),
                 lista_entregados,
                 lista_no_entregados
                 
