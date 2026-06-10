@@ -17,7 +17,10 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         ),
         controls=[
             ft.Container(
+                expand=True,
+                padding=10,
                 content=ft.Column(
+                    
                     [
                         ft.Text(
                             "Cargando informacion de las unidades..",
@@ -33,23 +36,23 @@ def UnidadesView(page, unidades_controller, actividades_controller):
                     alignment=ft.MainAxisAlignment.CENTER,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
-                expand=True,
             )
         ],
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     )
     
     unidad_editando = {"data": None}
     
-    nombre_edit = ft.TextField(label="Nombre de la unidad")
-    examen_edit = ft.TextField(label="Examen", keyboard_type=ft.KeyboardType.NUMBER)
-    proyecto_edit = ft.TextField(label="Proyecto", keyboard_type=ft.KeyboardType.NUMBER)
-    lista_edit = ft.TextField(label="Lista", keyboard_type=ft.KeyboardType.NUMBER)
-    actividades_edit = ft.TextField(label="Actividades", keyboard_type=ft.KeyboardType.NUMBER)
-    extra_edit = ft.TextField(label="Extra", keyboard_type=ft.KeyboardType.NUMBER)
+    nombre_edit = ft.TextField(label="Nombre de la unidad",border=ft.border.all(2, ft.Colors.BLUE),border_radius=10,)
+    examen_edit = ft.TextField(label="Examen", keyboard_type=ft.KeyboardType.NUMBER,border=ft.border.all(2, ft.Colors.BLUE),border_radius=10,)
+    proyecto_edit = ft.TextField(label="Proyecto", keyboard_type=ft.KeyboardType.NUMBER,border=ft.border.all(2, ft.Colors.BLUE),border_radius=10,)
+    lista_edit = ft.TextField(label="Lista", keyboard_type=ft.KeyboardType.NUMBER,border=ft.border.all(2, ft.Colors.BLUE),border_radius=10,)
+    actividades_edit = ft.TextField(label="Actividades", keyboard_type=ft.KeyboardType.NUMBER,border=ft.border.all(2, ft.Colors.BLUE),border_radius=10,)
+    extra_edit = ft.TextField(label="Extra", keyboard_type=ft.KeyboardType.NUMBER,border=ft.border.all(2, ft.Colors.BLUE),border_radius=10,)
     
     dialog_editar = ft.AlertDialog(
-        title=ft.Text("Editar unidad"),
+        title=ft.Text("Editar unidad",color="green",italic=True, weight="bold" ),
+        bgcolor=ft.Colors.BLUE_200,  
         content=ft.Column([
             nombre_edit,
             examen_edit,
@@ -59,8 +62,18 @@ def UnidadesView(page, unidades_controller, actividades_controller):
             extra_edit
         ], tight=True),
         actions=[
-            ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo()),
-            ft.ElevatedButton("Guardar", on_click=lambda e: guardar_edicion())
+            ft.TextButton("Cancelar", on_click=lambda e: cerrar_dialogo(),style=ft.ButtonStyle(
+                bgcolor=ft.Colors.RED,
+                color=ft.Colors.WHITE,
+                overlay_color=ft.Colors.RED_200,
+                shape=ft.RoundedRectangleBorder(radius=8)
+            )),
+            ft.ElevatedButton("Guardar", on_click=lambda e: guardar_edicion(),style=ft.ButtonStyle(
+                bgcolor=ft.Colors.GREEN,
+                color=ft.Colors.WHITE,
+                overlay_color=ft.Colors.GREEN_200,
+                shape=ft.RoundedRectangleBorder(radius=8)
+            ),)
         ]
     )
     page.overlay.append(dialog_editar)
@@ -71,13 +84,7 @@ def UnidadesView(page, unidades_controller, actividades_controller):
     def guardar_edicion():
         u = unidad_editando["data"]
     
-        total = (
-            int(examen_edit.value) +
-            int(proyecto_edit.value) +
-            int(lista_edit.value) +
-            int(actividades_edit.value) +
-            int(extra_edit.value)
-        )
+        total = (int(examen_edit.value) +int(proyecto_edit.value) +int(lista_edit.value) +int(actividades_edit.value) +int(extra_edit.value))
     
         if total != 100:
             page.show_snack_bar(ft.SnackBar(ft.Text("La suma debe ser 100")))
@@ -159,8 +166,6 @@ def UnidadesView(page, unidades_controller, actividades_controller):
             for u in unidades:
                 lista_unidades.controls.append(
                     ft.Card(
-                        width=500,
-                        height=550,
                         bgcolor=ft.Colors.WHITE,
                         shadow_color=ft.Colors.BLUE_700,
                         elevation=10,
@@ -214,12 +219,9 @@ def UnidadesView(page, unidades_controller, actividades_controller):
         
         
         def agregar():
-            if not nombre.value or not examen.value or not proyecto.value or not actividades.value or not lista.value or not extra.value:
-                page.show_dialog(ft.SnackBar(ft.Text("Por favor, complete los campos solicitados")))
-                return
             
             try:
-                total = int(examen.value) + int(proyecto.value) + int(lista.value) + int(actividades.value) + int(extra.value)
+                total = int(examen.value or 0) + int(proyecto.value or 0) + int(lista.value or 0) + int(actividades.value or 0) + int(extra.value or 0)
                 if total != 100:
                     resultado.value = f"La suma debe ser 100, ahora es {total}"
                     return
@@ -250,12 +252,12 @@ def UnidadesView(page, unidades_controller, actividades_controller):
     
         
     
-        agregar_unidad = ft.IconButton(ft.Icons.ADD_BOX, expand=True, on_click=agregar, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)), icon_size=40, tooltip="Agregar unidad")
-        examen = ft.TextField(label="Valor examen", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
-        proyecto = ft.TextField(label="Valor proyecto", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
-        lista = ft.TextField(label="Valor lista (asistencia)", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
-        actividades = ft.TextField(label="Valor actividades", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
-        extra = ft.TextField(label="Valor extra", expand=True, keyboard_type=ft.KeyboardType.NUMBER,width=200, height=60)
+        agregar_unidad = ft.IconButton(ft.Icons.ADD_BOX,  on_click=agregar, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)), icon_size=40, tooltip="Agregar unidad")
+        examen = ft.TextField(label="Valor examen", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
+        proyecto = ft.TextField(label="Valor proyecto", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
+        lista = ft.TextField(label="Valor lista (asistencia)", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
+        actividades = ft.TextField(label="Valor actividades", expand=True, keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
+        extra = ft.TextField(label="Valor extra", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
         resultado = ft.Text(value="", color="red")
         
         def evaluacion_click(unidad):
@@ -268,34 +270,87 @@ def UnidadesView(page, unidades_controller, actividades_controller):
             page.go("/evaluacion")
         
         vista.controls.clear()
+
         vista.controls.extend([
-                ft.Container(
+            ft.Container(
+                expand=True,
+                padding=10,
+                content=ft.Column(
+                    [
+                    ft.ResponsiveRow(
+                                [
+                                    ft.Column(
+                                        [
+                                            ft.Text("Agregar nueva unidad", size=18, weight="bold", color="green")
+                                        ],
+                                        col={"xs": 12, "sm": 12, "md": 3},
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                                    ),
+                                    ft.Column(
+                                        [nombre],
+                                        col={"xs": 12, "sm": 8, "md": 6},
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                                    ),
+                                    ft.Column(
+                                        [agregar_unidad],
+                                        col={"xs": 12, "sm": 4, "md": 3},
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                                    ),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                run_spacing=10,
+                            )
+                            
+                                ,
+        
+                        resultado,
+        
+                        ft.ResponsiveRow(
+                            [
+                                ft.Column(
+                                    [actividades],
+                                    col={"xs": 12, "sm": 6, "md": 4, "lg": 2}
+                                ),
+                                ft.Column(
+                                    [proyecto],
+                                    col={"xs": 12, "sm": 6, "md": 4, "lg": 2}
+                                ),
+                                ft.Column(
+                                    [examen],
+                                    col={"xs": 12, "sm": 6, "md": 4, "lg": 2}
+                                ),
+                                ft.Column(
+                                    [lista],
+                                    col={"xs": 12, "sm": 6, "md": 4, "lg": 2}
+                                ),
+                                ft.Column(
+                                    [extra],
+                                    col={"xs": 12, "sm": 6, "md": 4, "lg": 2}
+                                ),
+                            ],
+                            spacing=10,
+                            run_spacing=10,
+                            alignment=ft.MainAxisAlignment.CENTER,
+                        ),
+        
+                        ft.Divider(
+                            height=2,
+                            thickness=2,
+                            color=ft.Colors.GREEN_600
+                        ),
+        
+                        lista_unidades,
+                    ],
                     expand=True,
-                    padding=20,
-                    content=ft.Row([
-                        ft.Column([
-                            ft.Row([
-                                ft.Text("Agregar nueva unidad", size=18, weight="bold", color="green"),
-                                nombre,agregar_unidad
-                                
-                            ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
-                            resultado,
-                            ft.ResponsiveRow([
-    ft.Column([actividades], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
-    ft.Column([proyecto], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
-    ft.Column([examen], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
-    ft.Column([lista], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
-    ft.Column([extra], col={"xs": 12, "sm": 6, "md": 4, "lg": 2}),
-])
-                                
-                        ],alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER,),
-                        
-                    ], alignment=ft.MainAxisAlignment.CENTER,)
-                ),ft.Divider(height=2, thickness=2, color=ft.Colors.GREEN_600),
-                lista_unidades
-            ]
-        )
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+            )
+        ])
+
         page.update()
-    
     page.run_task(cargar_unidades_vista)
     return vista

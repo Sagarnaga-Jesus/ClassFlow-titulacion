@@ -44,6 +44,8 @@ def LoginView(page: ft.Page, auth_controller):
         return results.get("courses", [])
     
     def login_google_click(e):
+        
+        
     
         creds = login_google()
         user_info = get_user_info(creds)

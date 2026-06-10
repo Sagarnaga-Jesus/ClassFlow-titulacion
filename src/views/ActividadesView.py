@@ -152,7 +152,7 @@ def ActividadesView(page, actividades_controller):
                                             on_click=lambda e, c=act: eliminar(c)
                                         )
                                     ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                                    ft.Text(act["descripcion"], size=18, color=ft.Colors.BLUE_GREY_400),
+                                    ft.Text(act["descripcion"], size=18, color=ft.Colors.BLUE_GREY_400, expand=True),
                                 ], alignment=ft.MainAxisAlignment.START)
                             
                             ),
@@ -180,10 +180,19 @@ def ActividadesView(page, actividades_controller):
         vista.controls.clear()
         
         vista.controls.extend([
-            ft.Row([select_actividad,tipo, agregar_act],),
-                ft.Divider(color="green")
-                    ,lista_actividades
-            ])
+            ft.ResponsiveRow(
+                [
+                    ft.Column([select_actividad], col={"xs": 12, "sm": 5, "md": 4}),
+                    ft.Column([tipo], col={"xs": 12, "sm": 5, "md": 4}),
+                    ft.Column([agregar_act], col={"xs": 12, "sm": 2, "md": 2}),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                run_spacing=10,
+            ),
+            ft.Divider(color="green"),
+            lista_actividades
+        ])
+        
 
         page.update()
         

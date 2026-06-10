@@ -88,9 +88,8 @@ def AsistenciaView(page, asistencia_controller, participantes_controller):
 
             success, message = (asistencia_controller.guardar_asistencia(id_alumno,id_unidad,faltas,asistencias_maximas))
 
-            page.snack_bar = ft.SnackBar(content=ft.Text(message),bgcolor=( ft.Colors.GREEN if success else ft.Colors.RED))
+            page.show_dialog(content=ft.Text(message),bgcolor=( ft.Colors.GREEN if success else ft.Colors.RED))
 
-            page.snack_bar.open = True
 
             if success:
                 cargar_asistencias()
@@ -129,6 +128,7 @@ def AsistenciaView(page, asistencia_controller, participantes_controller):
                     campo_asistencias_maximas,
                     guardar_btn
                 ],
+                alignment=ft.MainAxisAlignment.CENTER,
                 spacing=20
             ),
             ft.Divider(),

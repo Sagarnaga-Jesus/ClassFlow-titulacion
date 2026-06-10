@@ -18,9 +18,16 @@ def start(page: ft.Page):
     
     page.title = "ClassFlow"
     page.scroll = ft.ScrollMode.AUTO
+    page.scroll = ft.ScrollMode.ALWAYS
     page.theme_mode = ft.ThemeMode.LIGHT
-    page.window_width = 800
-    page.window_height = 1000
+    page.window.min_width = 390
+    page.window.min_height = 700
+    
+    page.window.width = 1200
+    page.window.height = 800
+    
+    page.window.max_width = 1920
+    page.window.max_height = 1080
     
     auth = AuthController()
     clases = ClasesController()
