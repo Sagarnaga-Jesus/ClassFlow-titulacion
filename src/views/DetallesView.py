@@ -62,17 +62,34 @@ def DetallesView(page, actividades_controller):
             creds, id_clase, id_google_clase, actividad["id_google"]
         )
     
-        detalle = ft.Row([
-            ft.Column([
-                ft.Text(actividad["nombre"], size=20, weight="bold", expand=True),ft.Text(actividad.get("descripcion", "Sin descripción", ),expand=True ,size=16),]),
-            
-            ft.Column([ft.Text(f"Valor: {actividad.get('valor', 'N/A')}", expand=True),
-                ]),
-            ft.Column([ft.Text(f"Fecha entrega: {actividad.get('fecha_entrega', 'N/A')}", expand=True),
-                ]),
-            ft.Column([ft.IconButton(icon=ft.Icons.REFRESH,tooltip="Actualizar",icon_size=30,on_click=lambda e: recargar(),icon_color=ft.Colors.GREEN, expand=True),
-            ]),
-        ],alignment=ft.MainAxisAlignment.CENTER, spacing=15)
+        detalle = ft.ResponsiveRow(
+            [
+                ft.Column(
+                    [ft.Text(f"Nombre: {actividad['nombre']}",size=20,weight="bold"),ft.Text(actividad.get("descripcion", "Sin descripción"),size=16),
+                        ],col={"xs": 12, "md": 5}
+                ),
+        
+                ft.Column(
+                    [ft.Text(f"Categoría: {actividad['tipo']}",size=14)],
+                    col={"xs": 6, "md": 2}
+                ),
+        
+                ft.Column([ft.Text(f"Valor: {actividad.get('valor', 'N/A')}")],
+                    col={"xs": 6, "md": 1}
+                ),
+        
+                ft.Column([ft.Text(f"Fecha entrega: {actividad.get('fecha_entrega', 'N/A')}")],
+                    col={"xs": 12, "md": 3}
+                ),
+        
+                ft.Column([ft.IconButton(icon=ft.Icons.REFRESH,tooltip="Actualizar",icon_size=30,icon_color=ft.Colors.GREEN,on_click=lambda e: recargar(),)],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    col={"xs": 12, "md": 1}
+                ),
+            ],
+            run_spacing=10,
+            spacing=10,
+        )
         
         num_entregados = len(entregados)
         

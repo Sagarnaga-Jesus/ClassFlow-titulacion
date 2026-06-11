@@ -1,12 +1,13 @@
 import flet as ft
 import asyncio
+import random
 
 def UnidadesView(page, unidades_controller, actividades_controller, participantes_controller):
-    
+    clase = page.user_data.get("clase_actual")
     vista = ft.View(
         route="/unidades",
         appbar=ft.AppBar(
-            title=ft.Text("Clase"),
+            title=ft.Text(f"Clase: {clase["nombre"]}"),
             bgcolor=ft.Colors.BLUE_900,
             color=ft.Colors.WHITE,
             actions=[
@@ -128,7 +129,7 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
             return
             
         nombre = ft.TextField(label="Nombre de la unidad", icon=ft.Icons.TITLE)
-        lista_unidades = ft.GridView(expand=True, max_extent=400, child_aspect_ratio=1.2, spacing=20, run_spacing=20)
+        lista_unidades = ft.GridView(expand=True, max_extent=350, child_aspect_ratio=0.9, spacing=15, run_spacing=15)
         
         def actividad_click(unidad):
             creds = page.user_data["creds"]
@@ -159,18 +160,32 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
                 page.show_dialog(ft.SnackBar(ft.Text(msg)))
             else:
                 page.show_dialog(ft.SnackBar(ft.Text("Hubo un error al eliminar")))
-    
+        
+
+        colores_tarjetas = [
+            "#BFDBFE",
+            "#BBF7D0",
+            "#FDE68A",
+            "#FBCFE8",
+            "#DDD6FE",
+            "#A7F3D0",
+        ]
         
         def cargar_unidades():
             lista_unidades.controls.clear()
             unidades = unidades_controller.obtener_unidades(clase['id_clase'])
             
+            
     
             for u in unidades:
+                color = colores_tarjetas[
+                    hash(u["id_unidad"]) % len(colores_tarjetas)
+                ]
+                actividades = actividades_controller.obtener_actividades(u["id_unidad"])
                 lista_unidades.controls.append(
                     ft.Card(
-                        bgcolor=ft.Colors.WHITE,
-                        shadow_color=ft.Colors.BLUE_700,
+                        bgcolor=color,
+                        shadow_color=ft.Colors.BLUE_GREY_300,
                         elevation=10,
                         expand=True,
                         shape=ft.RoundedRectangleBorder(radius=12),
@@ -199,12 +214,17 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
                                     
                                     ],alignment=ft.MainAxisAlignment.CENTER,),
                                 
-                                ft.Text("Valores", size=16, weight="bold", color="green"),
-                                ft.Text(f"Actividades: {u["actividades"]}\n Proyecto: {u["proyecto"]} \n Examen: {u["examen"]}\n Asistencia: {u["lista"]}\n Extra: {u["extra"]}", size=14,),
+                                ft.Text("Criterios de Evaluacion", size=14, weight="bold", color="blue", expand=True),
+                                ft.Text(f"Actividades: {u["actividades"]}%\n Proyecto: {u["proyecto"]}% \n Examen: {u["examen"]}%\n Asistencia: {u["lista"]}%\n Extra: {u["extra"]}%", size=14,expand=True),
                                 
+                                ft.ExpansionTile(
+                                    title=ft.Text(f"Actividades"),
+                                    controls=[ft.ListTile(title=ft.Text(a["nombre"]), subtitle=ft.Text(a["tipo"]))for a in actividades],
+                                    expand=True
+                                ),
                                 
-                                ft.TextButton("Inasistencias",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color=ft.Colors.BLUE_700, overlay_color=ft.Colors.BLUE_100),on_click=lambda e, u=u: asistencia_click(u)),
-                                ft.TextButton("Ir a Evaluaciones",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color=ft.Colors.BLUE_700, overlay_color=ft.Colors.BLUE_100),on_click=lambda e, u=u: evaluacion_click(u)),
+                                ft.TextButton("Inasistencias",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color=ft.Colors.BLUE_700, overlay_color=ft.Colors.BLUE_100),on_click=lambda e, u=u: asistencia_click(u), expand=True),
+                                ft.TextButton("Ir a Evaluaciones",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color=ft.Colors.BLUE_700, overlay_color=ft.Colors.BLUE_100),on_click=lambda e, u=u: evaluacion_click(u), expand=True),
     
     
                                 

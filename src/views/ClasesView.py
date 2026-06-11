@@ -91,16 +91,28 @@ def ClasesView(page, clases_controller):
                 page.show_dialog(ft.SnackBar(ft.Text(msg)))
             page.show_dialog(ft.SnackBar(ft.Text("Hubo un error al eliminar")))
             
+        colores_tarjetas = [
+            "#BFDBFE",
+            "#BBF7D0",
+            "#FDE68A",
+            "#FBCFE8",
+            "#DDD6FE",
+            "#A7F3D0",
+        ]
+            
         def cargar_clases():
             if user and 'id_profesor' in user:
                 lista_clases.controls.clear()
                 clases_bd = clases_controller.obtener_clases(user['id_profesor'])
-        
+                
                 for c in clases_bd:
+                    color = colores_tarjetas[
+                        hash(c["id_clase"]) % len(colores_tarjetas)
+                    ]
                     lista_clases.controls.append(
                         ft.Card(
-                            bgcolor=ft.Colors.WHITE,
-                            shadow_color=ft.Colors.BLUE_GREY_700,
+                            bgcolor=color,
+                            shadow_color=ft.Colors.BLUE_GREY_300,
                             elevation=10,
                             shape=ft.RoundedRectangleBorder(radius=12),
                             content=ft.Container(

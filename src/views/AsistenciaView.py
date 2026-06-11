@@ -71,10 +71,7 @@ def AsistenciaView(page, asistencia_controller, participantes_controller):
 
         if not alumnos.value:
 
-            page.snack_bar = ft.SnackBar(content=ft.Text("Selecciona un alumno"),bgcolor=ft.Colors.RED, color=ft.Colors.WHITE)
-
-            page.snack_bar.open = True
-            page.update()
+            page.show_dialog(ft.SnackBar(ft.Text("Seleccione un alumno"),bgcolor=(ft.Colors.RED)))
             return
 
         try:
@@ -100,10 +97,7 @@ def AsistenciaView(page, asistencia_controller, participantes_controller):
 
         except ValueError:
 
-            page.snack_bar = ft.SnackBar(content=ft.Text("Ingresa valores numéricos válidos"),bgcolor=ft.Colors.RED)
-
-            page.snack_bar.open = True
-            page.update()
+            page.show_dialog(ft.SnackBar(ft.Text(["Ingresa un valor numerico"]),bgcolor=(ft.Colors.RED)))
 
     guardar_btn = ft.ElevatedButton("Guardar faltas", on_click=guardar_asistencia, width=150, bgcolor=ft.Colors.GREEN_700, color=ft.Colors.WHITE)
 
@@ -116,7 +110,7 @@ def AsistenciaView(page, asistencia_controller, participantes_controller):
             bgcolor=ft.Colors.BLUE_900,
             color="white",
             actions=[
-                ft.IconButton(ft.Icons.CLEAR_ALL,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase', '')}"),tooltip="Volver a unidades"),
+                ft.IconButton(ft.Icons.ARROW_BACK,icon_size=25,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase', '')}"),tooltip="Volver a unidades"),
                 ft.IconButton(ft.Icons.GROUPS_3,icon_size=25,on_click=lambda _: page.go("/participantes"),tooltip="Ver participantes"),
                 ft.IconButton(ft.Icons.WEB_STORIES,icon_size=25,on_click=lambda _: page.go("/clases"),tooltip="Volver a clases"),
                 ft.IconButton(ft.Icons.PERSON,icon_size=25,on_click=lambda _: page.go("/perfil"),tooltip="Ver perfil"),

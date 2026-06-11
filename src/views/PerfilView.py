@@ -3,17 +3,14 @@ import flet as ft
 def PerfilView(page):
 
     page.title = "Perfil"
-
+    clase = page.user_data.get("clase_actual")
     user = page.user_data.get("usuario", {})
 
     nombre = user.get("nombre", "Usuario")
     correo = user.get("correo", "")
     imagen = user.get("foto", "")
 
-    foto = ft.CircleAvatar(
-        foreground_image_src=imagen,
-        radius=60
-    )
+    foto = ft.CircleAvatar(foreground_image_src=imagen,radius=60)
 
     return ft.View(
         route="/perfil",
@@ -27,6 +24,7 @@ def PerfilView(page):
             color="white",
 
             actions=[
+                ft.IconButton(ft.Icons.CLEAR_ALL,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase', '')}"),tooltip="Volver a unidades"),
                 ft.IconButton(ft.Icons.WEB_STORIES,on_click=lambda _: page.go("/clases"),tooltip="Volver a clases"),
             ]
         ),
@@ -70,8 +68,6 @@ def PerfilView(page):
                                     alignment=ft.MainAxisAlignment.CENTER,
                                     spacing=15,
                                     controls=[
-                                        ft.ElevatedButton("Volver",icon=ft.Icons.ARROW_BACK,style=ft.ButtonStyle(bgcolor=ft.Colors.BLUE_700,color="white",shape=ft.RoundedRectangleBorder(radius=12),padding=20),on_click=lambda _: page.go("/clases")),
-
                                         ft.ElevatedButton("Cerrar sesión",icon=ft.Icons.LOGOUT,style=ft.ButtonStyle(bgcolor=ft.Colors.RED_400,color="white",shape=ft.RoundedRectangleBorder(radius=12),padding=20),on_click=lambda _: page.go("/"))
                                     ]
                                 )

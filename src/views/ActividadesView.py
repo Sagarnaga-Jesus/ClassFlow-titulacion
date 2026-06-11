@@ -131,14 +131,26 @@ def ActividadesView(page, actividades_controller):
             
             page.update()
     
-    
+        colores_tarjetas = [
+            "#BFDBFE",
+            "#BBF7D0",
+            "#FDE68A",
+            "#FBCFE8",
+            "#DDD6FE",
+            "#A7F3D0",
+        ]
     
         def cargar_actividades():
             lista_actividades.controls.clear()
             actividades = actividades_controller.obtener_actividades(unidad["id_unidad"])
             for act in actividades:
+                color = colores_tarjetas[
+                        hash(act["id_actividades"]) % len(colores_tarjetas)
+                    ]
                 lista_actividades.controls.append(
                     ft.Card(
+                        bgcolor=color,
+                        shadow_color=ft.Colors.BLUE_GREY_700,
                         content=ft.Container(
                             padding=15,
                             on_click=lambda e, a=act: actividad_click(e, a),
@@ -152,11 +164,12 @@ def ActividadesView(page, actividades_controller):
                                             on_click=lambda e, c=act: eliminar(c)
                                         )
                                     ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
+                                    ft.Text(act["tipo"], size=18, color=ft.Colors.BLUE_GREY_400, expand=True),
                                     ft.Text(act["descripcion"], size=18, color=ft.Colors.BLUE_GREY_400, expand=True),
                                 ], alignment=ft.MainAxisAlignment.START)
                             
                             ),
-                        elevation=5,
+                        elevation=10,
                         margin=10,
                         shape=ft.RoundedRectangleBorder(radius=12),
                         ),

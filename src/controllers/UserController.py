@@ -1,6 +1,4 @@
 from models.UserModel import UsuarioModel
-from models.shemasModel import UsuarioShema
-from pydantic import ValidationError
 
 class AuthController:
     def __init__(self):
