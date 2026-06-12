@@ -18,14 +18,14 @@ def PerfilView(page):
         bgcolor=ft.Colors.BLUE_GREY_50,
 
         appbar=ft.AppBar(
-            title=ft.Text("Mi Perfil",weight="bold"),
+            title=ft.Text("Mi Perfil",size=20, weight="bold"),
 
             bgcolor=ft.Colors.BLUE_900,
             color="white",
 
             actions=[
-                ft.IconButton(ft.Icons.CLEAR_ALL,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase', '')}"),tooltip="Volver a unidades"),
-                ft.IconButton(ft.Icons.WEB_STORIES,on_click=lambda _: page.go("/clases"),tooltip="Volver a clases"),
+                ft.IconButton(ft.Icons.CLEAR_ALL,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase', '')}"),tooltip="Volver a unidades", icon_size=30),
+                ft.IconButton(ft.Icons.WEB_STORIES,on_click=lambda _: page.go("/clases"),tooltip="Volver a clases", icon_size=30),
             ]
         ),
 

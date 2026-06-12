@@ -1,19 +1,19 @@
 import flet as ft
 
 def DetallesView(page, actividades_controller):
-    
+    actividad = page.user_data.get("actividad_actual")
     
     vista = ft.View(
         route="/detalles",
         appbar=ft.AppBar(
-            title=ft.Text("Detalles de la actividad"),
+            title=ft.Text(f"Detalles de la actividad: {actividad['nombre']}",size=25, weight="bold"),
             bgcolor=ft.Colors.BLUE_900,
             color=ft.Colors.WHITE,
             actions=[
                 ft.IconButton(ft.Icons.ARROW_BACK, on_click=lambda _: page.go("/actividad"), tooltip="Volver a actividades"),
-                ft.IconButton(ft.Icons.GROUPS_3, icon_size=25, on_click=lambda _: page.go("/participantes"), tooltip="Ver participantes"),
-                ft.IconButton(ft.Icons.WEB_STORIES, icon_size=25, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
-                ft.IconButton(ft.Icons.PERSON, icon_size=25, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
+                ft.IconButton(ft.Icons.GROUPS_3, icon_size=30, on_click=lambda _: page.go("/participantes"), tooltip="Ver participantes"),
+                ft.IconButton(ft.Icons.WEB_STORIES, icon_size=30, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
+                ft.IconButton(ft.Icons.PERSON, icon_size=30, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
                 ],
         ),
         controls=[
@@ -47,7 +47,7 @@ def DetallesView(page, actividades_controller):
         
     
         unidad = page.user_data.get("unidad_actual")
-        actividad = page.user_data.get("actividad_actual")
+        
     
         if not actividad:
             page.show_snack_bar(ft.SnackBar(ft.Text("No hay actividad seleccionada"), bgcolor="red"))

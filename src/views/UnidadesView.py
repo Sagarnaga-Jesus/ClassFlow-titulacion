@@ -7,13 +7,13 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
     vista = ft.View(
         route="/unidades",
         appbar=ft.AppBar(
-            title=ft.Text(f"Clase: {clase["nombre"]}"),
+            title=ft.Text(f"Clase: {clase["nombre"]}",size=25, weight="bold"),
             bgcolor=ft.Colors.BLUE_900,
             color=ft.Colors.WHITE,
             actions=[
-                    ft.IconButton(ft.Icons.GROUPS_3, icon_size=25, on_click=lambda _: page.go("/participantes"), tooltip="Ver participantes"),
-                    ft.IconButton(ft.Icons.WEB_STORIES, icon_size=25, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
-                    ft.IconButton(ft.Icons.PERSON, icon_size=25, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
+                    ft.IconButton(ft.Icons.GROUPS_3, icon_size=30, on_click=lambda _: page.go("/participantes"), tooltip="Ver participantes", ),
+                    ft.IconButton(ft.Icons.WEB_STORIES, icon_size=30, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases", ),
+                    ft.IconButton(ft.Icons.PERSON, icon_size=30, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil", ),
                     ],
         ),
         controls=[
@@ -161,14 +161,41 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
             else:
                 page.show_dialog(ft.SnackBar(ft.Text("Hubo un error al eliminar")))
         
-
+        def cerrar_dialog(dialog):
+            dialog.open = False
+            page.update()
+            
+        def mostrar_actividades(u,color):
+            actividades = actividades_controller.obtener_actividades(u["id_unidad"])
+        
+            items = [
+                ft.ListTile(
+                    title=ft.Text(a["nombre"]),
+                    subtitle=ft.Text(a["tipo"]),
+                    leading=ft.Icon(ft.Icons.CHECK_CIRCLE_OUTLINE)
+                )
+                for a in actividades
+            ]
+        
+            dialog = ft.AlertDialog(
+                title=ft.Text(f"Actividades - {u['nombre']}"),
+                bgcolor=color,
+                content=ft.Column(items, tight=True),
+                actions=[
+                    ft.TextButton("Cerrar", on_click=lambda e: cerrar_dialog(dialog))
+                ]
+            )
+        
+            page.overlay.append(dialog)
+            dialog.open = True
+            page.update()
+        
         colores_tarjetas = [
-            "#BFDBFE",
-            "#BBF7D0",
-            "#FDE68A",
-            "#FBCFE8",
-            "#DDD6FE",
-            "#A7F3D0",
+            "#84ABE0",
+            "#81C784",
+            "#B39DDB",
+            "#ED9AB5",
+            "#9DEDE9",
         ]
         
         def cargar_unidades():
@@ -181,7 +208,6 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
                 color = colores_tarjetas[
                     hash(u["id_unidad"]) % len(colores_tarjetas)
                 ]
-                actividades = actividades_controller.obtener_actividades(u["id_unidad"])
                 lista_unidades.controls.append(
                     ft.Card(
                         bgcolor=color,
@@ -194,7 +220,7 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
                             content=ft.Column([
                                 ft.Row([
                                     ft.Column([
-                                        ft.Text(u["nombre"], size=18, weight="bold", color="blue")
+                                        ft.Text(u["nombre"], size=18, weight="bold", color="dark")
                                         ]),
                                     
                                     ft.Column([
@@ -205,6 +231,10 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
                                                     on_click=lambda e, u=u: abrir_editar(u)
                                                 ),
                                                 ft.PopupMenuItem(
+                                                    content=ft.Text("Ver actividades"),
+                                                    on_click=lambda e, u=u, c=color: mostrar_actividades(u,c)
+                                                ),
+                                                ft.PopupMenuItem(
                                                     content=ft.Text("Eliminar"),
                                                     on_click=lambda e, u=u: eliminar(u)
                                                 ),
@@ -212,19 +242,76 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
                                         )
                                     ], horizontal_alignment=ft.CrossAxisAlignment.END)
                                     
-                                    ],alignment=ft.MainAxisAlignment.CENTER,),
+                                ],alignment=ft.MainAxisAlignment.CENTER,),
                                 
-                                ft.Text("Criterios de Evaluacion", size=14, weight="bold", color="blue", expand=True),
-                                ft.Text(f"Actividades: {u["actividades"]}%\n Proyecto: {u["proyecto"]}% \n Examen: {u["examen"]}%\n Asistencia: {u["lista"]}%\n Extra: {u["extra"]}%", size=14,expand=True),
+                                ft.Text("Criterios de Evaluacion", size=14, weight="bold", color="dark", expand=True),
+                                ft.ResponsiveRow(
+                                    [
+                                        ft.Column(
+                                            [
+                                                ft.Container(
+                                                    content=ft.Text(f"📚 Act. {u['actividades']}%"),
+                                                    bgcolor="#E3F2FD",
+                                                    border_radius=15,
+                                                    padding=8,
+                                                )
+                                            ],
+                                            col={"xs": 6, "md": 4},
+                                        ),
                                 
-                                ft.ExpansionTile(
-                                    title=ft.Text(f"Actividades"),
-                                    controls=[ft.ListTile(title=ft.Text(a["nombre"]), subtitle=ft.Text(a["tipo"]))for a in actividades],
-                                    expand=True
+                                        ft.Column(
+                                            [
+                                                ft.Container(
+                                                    content=ft.Text(f"📝 Proy. {u['proyecto']}%"),
+                                                    bgcolor="#E8F5E9",
+                                                    border_radius=15,
+                                                    padding=8,
+                                                )
+                                            ],
+                                            col={"xs": 6, "md": 4},
+                                        ),
+                                
+                                        ft.Column(
+                                            [
+                                                ft.Container(
+                                                    content=ft.Text(f"📖 Exam. {u['examen']}%"),
+                                                    bgcolor="#F3E5F5",
+                                                    border_radius=15,
+                                                    padding=8,
+                                                )
+                                            ],
+                                            col={"xs": 6, "md": 4},
+                                        ),
+                                
+                                        ft.Column(
+                                            [
+                                                ft.Container(
+                                                    content=ft.Text(f"✅ Asist. {u['lista']}%"),
+                                                    bgcolor="#FFF3E0",
+                                                    border_radius=15,
+                                                    padding=8,
+                                                )
+                                            ],
+                                            col={"xs": 6, "md": 4},
+                                        ),
+                                
+                                        ft.Column(
+                                            [
+                                                ft.Container(
+                                                    content=ft.Text(f"⭐ Extra {u['extra']}%"),
+                                                    bgcolor="#FCE4EC",
+                                                    border_radius=15,
+                                                    padding=8,
+                                                )
+                                            ],
+                                            col={"xs": 6, "md": 4},
+                                        ),
+                                    ],
+                                    spacing=5,
                                 ),
                                 
-                                ft.TextButton("Inasistencias",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color=ft.Colors.BLUE_700, overlay_color=ft.Colors.BLUE_100),on_click=lambda e, u=u: asistencia_click(u), expand=True),
-                                ft.TextButton("Ir a Evaluaciones",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color=ft.Colors.BLUE_700, overlay_color=ft.Colors.BLUE_100),on_click=lambda e, u=u: evaluacion_click(u), expand=True),
+                                ft.TextButton("Inasistencias",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color="black", overlay_color=ft.Colors.BLUE_GREY_300),on_click=lambda e, u=u: asistencia_click(u), expand=True),
+                                ft.TextButton("Ir a Evaluaciones",icon=ft.Icons.BAR_CHART,style=ft.ButtonStyle(color="black", overlay_color=ft.Colors.BLUE_GREY_300),on_click=lambda e, u=u: evaluacion_click(u), expand=True),
     
     
                                 
@@ -276,11 +363,11 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
         
     
         agregar_unidad = ft.IconButton(ft.Icons.ADD_BOX,  on_click=agregar, style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)), icon_size=40, tooltip="Agregar unidad")
-        examen = ft.TextField(label="Valor examen", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
-        proyecto = ft.TextField(label="Valor proyecto", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
-        lista = ft.TextField(label="Valor lista (asistencia)", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
-        actividades = ft.TextField(label="Valor actividades", expand=True, keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
-        extra = ft.TextField(label="Valor extra", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
+        examen = ft.TextField(label="Criterio de examen", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
+        proyecto = ft.TextField(label="Criterio de proyecto", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
+        lista = ft.TextField(label="Criterio de lista (asistencia)", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
+        actividades = ft.TextField(label="Criterio de actividades", expand=True, keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
+        extra = ft.TextField(label="Criterio extra", expand=True,  keyboard_type=ft.KeyboardType.NUMBER,dense=True,)
         resultado = ft.Text(value="", color="red")
         
         def evaluacion_click(unidad):

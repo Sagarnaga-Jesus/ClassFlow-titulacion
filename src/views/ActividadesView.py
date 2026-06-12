@@ -3,18 +3,19 @@ import asyncio
 
 def ActividadesView(page, actividades_controller):
     clase = page.user_data.get("clase_actual")
+    unidad = page.user_data.get("unidad_actual")
     
     vista = ft.View(
             route="/actividad",
             appbar=ft.AppBar(
-                title=ft.Text(f"Actividades"),
+                title=ft.Text(f"Actividades de la unidad: {unidad['nombre']}",size=25, weight="bold"),
                 bgcolor=ft.Colors.BLUE_900,
                 color="white",
                 actions=[
-                    ft.IconButton(ft.Icons.ARROW_BACK,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase','')}")),
-                    ft.IconButton(ft.Icons.GROUPS_3, icon_size=25, on_click=lambda _: page.go("/participantes"), tooltip="Ver participantes"),
-                    ft.IconButton(ft.Icons.WEB_STORIES, on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
-                    ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
+                    ft.IconButton(ft.Icons.ARROW_BACK, icon_size=30,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase','')}"), tooltip="Volver a unidades"),
+                    ft.IconButton(ft.Icons.GROUPS_3, icon_size=30, on_click=lambda _: page.go("/participantes"), tooltip="Ver participantes"),
+                    ft.IconButton(ft.Icons.WEB_STORIES, icon_size=30,on_click=lambda _: page.go("/clases"), tooltip="Volver a clases"),
+                    ft.IconButton(ft.Icons.PERSON, icon_size=30,on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
                 ],
             ),
             controls=[
@@ -45,7 +46,7 @@ def ActividadesView(page, actividades_controller):
         await asyncio.sleep(2)
         
         actividad = page.user_data.get("actividades", [])
-        unidad = page.user_data.get("unidad_actual")
+        
         if not clase:
             page.show_snack_bar(ft.SnackBar(ft.Text("No hay clase seleccionada"), bgcolor="red"))
             return
@@ -134,8 +135,14 @@ def ActividadesView(page, actividades_controller):
         colores_tarjetas = [
             "#BFDBFE",
             "#BBF7D0",
+            "#84ABE0",
+            "#81C784",
+            "#9DEDE9",
             "#FDE68A",
             "#FBCFE8",
+            "#84ABE0",
+            "#B39DDB",
+            "#ED9AB5",
             "#DDD6FE",
             "#A7F3D0",
         ]
@@ -164,8 +171,8 @@ def ActividadesView(page, actividades_controller):
                                             on_click=lambda e, c=act: eliminar(c)
                                         )
                                     ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                                    ft.Text(act["tipo"], size=18, color=ft.Colors.BLUE_GREY_400, expand=True),
-                                    ft.Text(act["descripcion"], size=18, color=ft.Colors.BLUE_GREY_400, expand=True),
+                                    ft.Text(act["tipo"], size=18, weight="bold", color=ft.Colors.BLUE_GREY_400, expand=True),
+                                    ft.Text(act["descripcion"], size=18, weight="bold", color=ft.Colors.BLUE_GREY_400, expand=True),
                                 ], alignment=ft.MainAxisAlignment.START)
                             
                             ),

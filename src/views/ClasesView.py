@@ -6,11 +6,11 @@ def ClasesView(page, clases_controller):
     vista = ft.View(
         route="/clases",
         appbar=ft.AppBar(
-            title=ft.Text("Clases"),
+            title=ft.Text("Clases",size=25, weight="bold"),
             bgcolor=ft.Colors.BLUE_900,
             color="white",
             actions=[
-                ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
+                ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil",icon_size=30),
             ],
         ),
         
@@ -92,12 +92,11 @@ def ClasesView(page, clases_controller):
             page.show_dialog(ft.SnackBar(ft.Text("Hubo un error al eliminar")))
             
         colores_tarjetas = [
-            "#BFDBFE",
-            "#BBF7D0",
-            "#FDE68A",
-            "#FBCFE8",
-            "#DDD6FE",
-            "#A7F3D0",
+            "#84ABE0",
+            "#81C784",
+            "#B39DDB",
+            "#ED9AB5",
+            "#9DEDE9",
         ]
             
         def cargar_clases():
@@ -121,7 +120,7 @@ def ClasesView(page, clases_controller):
                                 on_click=lambda e, c=c: unidades_click(c),
                                 content=ft.Column([
                                     ft.Row([
-                                        ft.Text(c["nombre"], size=22, weight="bold", color=ft.Colors.BLUE_700, expand=True),
+                                        ft.Text(c["nombre"], size=22, weight="bold", color="dark", expand=True),
                                         ft.IconButton(
                                             ft.Icons.DELETE,
                                             tooltip="Eliminar clase",
@@ -129,7 +128,7 @@ def ClasesView(page, clases_controller):
                                             expand=True
                                         )
                                     ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                                    ft.Text(c["descripcion"], expand=True ,size=18, color=ft.Colors.BLUE_GREY_400),
+                                    ft.Text(c["descripcion"], weight="bold", expand=True ,size=18, color="dark"),
                                 ], alignment=ft.MainAxisAlignment.START)
                             )
                         )
@@ -153,9 +152,12 @@ def ClasesView(page, clases_controller):
         vista.controls.clear()
 
         vista.controls.extend([
+            
             ft.Container(
+                
                 content=ft.Row(
-                    [select_clases, agregar_clase],
+                    
+                    [ft.Image(src="src/image/Logo.png",width=150,height=150,),select_clases, agregar_clase],
                     alignment=ft.MainAxisAlignment.CENTER,
                     spacing=20
                 )

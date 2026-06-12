@@ -1,5 +1,6 @@
 from models.databaseModel import Database
 from googleapiclient.discovery import build
+from datetime import datetime
 
 class EvaluacionModel:
     def __init__(self):
@@ -116,8 +117,6 @@ class ClasesModel:
         conn.commit()
         conn.close()
         return "clase eliminada"
-        
-
 
 class UnidadesModel:
     def __init__(self):
@@ -209,6 +208,15 @@ class ActividadesModel:
     def guardar_actividades(self, id_unidad, titulo, descripcion, tipo, valor, fecha_entrega, id_google):
         conn = self.db.get_connection()
         cursor = conn.cursor(dictionary=True)
+
+        if fecha_entrega:
+            fecha_entrega = datetime(
+                fecha_entrega["year"],
+                fecha_entrega["month"],
+                fecha_entrega["day"]
+            )
+        else:
+            fecha_entrega = None
 
         cursor.execute("SELECT id_actividades FROM actividades WHERE id_google=%s", (id_google,))
         existe = cursor.fetchone()

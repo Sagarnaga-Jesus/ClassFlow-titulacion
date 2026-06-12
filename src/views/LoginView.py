@@ -85,11 +85,12 @@ def LoginView(page: ft.Page, auth_controller):
         vertical_alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         appbar=ft.AppBar(
-            title=ft.Text("Login"),
+            title=ft.Text("Inicio de sesion",size=25),
             bgcolor=ft.Colors.BLUE_900,
-            color="white"
+            color="white",
         ),
         controls=[
+            ft.Image(src="src/image/Logo.png",width=350,height=300,),
             ft.Card(
                 shadow_color=ft.Colors.BLUE_900,
                 elevation=24,
@@ -97,11 +98,12 @@ def LoginView(page: ft.Page, auth_controller):
                 content=ft.Container(
                     border=ft.border.all(2, ft.Colors.BLUE),
                     border_radius=15,
-                    padding=20,
+                    padding=5,
                     content=ft.Column(
                         [
+                            
                             ft.Icon(ft.Icons.LOCK_PERSON, size=50, color=button_color),
-                            ft.Text("Sistema ClassFlow", size=24, weight="bold"),
+                            ft.Text("Sistema ClassFlow", size=30, weight="bold"),
                             google_btn,
                             ft.Text(
                                 "Nota: Este sistema solo acepta inicios de sesión con Google",
@@ -110,7 +112,7 @@ def LoginView(page: ft.Page, auth_controller):
                             ),
                         ],
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        spacing=20,
+                        spacing=10,
                         tight=True
                     )
                 )

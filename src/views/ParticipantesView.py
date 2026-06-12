@@ -7,14 +7,14 @@ def ParticipantesView(page,participantes_controller,clases_controller):
             route="/participantes",
     
             appbar=ft.AppBar(
-                title=ft.Text("Participantes"),
+                title=ft.Text(f"Participantes de {clase['nombre']}",size=25, weight="bold"),
                 bgcolor=ft.Colors.BLUE_900,
                 color="white",
     
                 actions=[
-                    ft.IconButton(ft.Icons.ARROW_BACK,on_click=lambda _:page.go(f"/unidades/{clase.get("id_clase","")}")),
-                    ft.IconButton(ft.Icons.WEB_STORIES,on_click=lambda _:page.go("/clases")),
-                    ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil"),
+                    ft.IconButton(ft.Icons.ARROW_BACK,on_click=lambda _:page.go(f"/unidades/{clase.get("id_clase","")}"), icon_size=30),
+                    ft.IconButton(ft.Icons.WEB_STORIES,on_click=lambda _:page.go("/clases"), icon_size=30),
+                    ft.IconButton(ft.Icons.PERSON, on_click=lambda _: page.go("/perfil"), tooltip="Ver perfil", icon_size=30),
                 ]
             ),
     

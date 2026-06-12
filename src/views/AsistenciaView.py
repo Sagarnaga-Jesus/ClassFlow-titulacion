@@ -106,14 +106,14 @@ def AsistenciaView(page, asistencia_controller, participantes_controller):
     return ft.View(
         route="/asistencia",
         appbar=ft.AppBar(
-            title=ft.Text("Asistencia"),
+            title=ft.Text("Asistencia",size=25, weight="bold"),
             bgcolor=ft.Colors.BLUE_900,
             color="white",
             actions=[
-                ft.IconButton(ft.Icons.ARROW_BACK,icon_size=25,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase', '')}"),tooltip="Volver a unidades"),
-                ft.IconButton(ft.Icons.GROUPS_3,icon_size=25,on_click=lambda _: page.go("/participantes"),tooltip="Ver participantes"),
-                ft.IconButton(ft.Icons.WEB_STORIES,icon_size=25,on_click=lambda _: page.go("/clases"),tooltip="Volver a clases"),
-                ft.IconButton(ft.Icons.PERSON,icon_size=25,on_click=lambda _: page.go("/perfil"),tooltip="Ver perfil"),
+                ft.IconButton(ft.Icons.ARROW_BACK,icon_size=30,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase', '')}"),tooltip="Volver a unidades"),
+                ft.IconButton(ft.Icons.GROUPS_3,icon_size=30,on_click=lambda _: page.go("/participantes"),tooltip="Ver participantes"),
+                ft.IconButton(ft.Icons.WEB_STORIES,icon_size=30,on_click=lambda _: page.go("/clases"),tooltip="Volver a clases"),
+                ft.IconButton(ft.Icons.PERSON,icon_size=30,on_click=lambda _: page.go("/perfil"),tooltip="Ver perfil"),
             ],
         ),
         controls=[
