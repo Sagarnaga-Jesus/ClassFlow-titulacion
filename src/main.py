@@ -43,7 +43,7 @@ def start(page: ft.Page):
         if page.route == "/":
             page.views.append(LoginView(page,auth))
         elif page.route == "/clases":
-            page.views.append(ClasesView(page, clases))
+            page.views.append(ClasesView(page, clases, unidades, actividades, participantes))
         elif page.route == "/perfil":
             page.views.append(PerfilView(page))
         elif page.route.startswith("/unidades"):

@@ -160,6 +160,21 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
                 page.show_dialog(ft.SnackBar(ft.Text(msg)))
             else:
                 page.show_dialog(ft.SnackBar(ft.Text("Hubo un error al eliminar")))
+                
+        def actividad_salto_click(e,u, actividad):
+            creds = page.user_data["creds"]
+            id_google_clase = page.user_data["clase_actual"]["id_google"]
+            page.user_data["unidad_actual"] = u
+        
+            entregas = actividades_controller.obtener_entregas(
+                creds,
+                id_google_clase,
+                actividad["id_google"]
+            )
+        
+            page.user_data["actividad_actual"] = actividad
+            page.user_data["entregas"] = entregas
+            page.go("/detalles")
         
         def cerrar_dialog(dialog):
             dialog.open = False
@@ -171,8 +186,11 @@ def UnidadesView(page, unidades_controller, actividades_controller, participante
             items = [
                 ft.ListTile(
                     title=ft.Text(a["nombre"]),
+                    bgcolor=color,
                     subtitle=ft.Text(a["tipo"]),
+                    on_click=lambda e, a=a, u=u: actividad_salto_click(e,u, a),
                     leading=ft.Icon(ft.Icons.CHECK_CIRCLE_OUTLINE)
+                    
                 )
                 for a in actividades
             ]

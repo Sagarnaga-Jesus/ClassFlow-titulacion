@@ -1,7 +1,8 @@
 import flet as ft
 import asyncio
 
-def ClasesView(page, clases_controller):
+
+def ClasesView(page, clases_controller, unidades_controller,actividades_controller,participantes_controller):
     
     vista = ft.View(
         route="/clases",
@@ -39,7 +40,7 @@ def ClasesView(page, clases_controller):
     )
     
     async def clases_carga():
-        await asyncio.sleep(2)
+        await asyncio.sleep(1)
         data = page.user_data
         user = data["usuario"]
         clases = data["clases"]
@@ -83,6 +84,18 @@ def ClasesView(page, clases_controller):
             page.user_data["clase_actual"] = clase
             page.go("/unidades")
             
+        def actividad_click(clase,unidad):
+            page.user_data["clase_actual"] = clase
+            creds = page.user_data["creds"]
+            id_google = page.user_data["clase_actual"]["id_google"]
+            
+            participantes_controller.obtener_google(creds, id_google)
+        
+            actividades = actividades_controller.obtener_google(creds,id_google)
+            page.user_data["actividades"]= actividades
+            page.user_data["unidad_actual"] = unidad
+            page.go("/actividad")
+            
         def eliminar(c):
             id_clase = c["id_clase"]
             msg=clases_controller.eliminar_clase(id_clase)
@@ -90,6 +103,37 @@ def ClasesView(page, clases_controller):
                 cargar_clases()
                 page.show_dialog(ft.SnackBar(ft.Text(msg)))
             page.show_dialog(ft.SnackBar(ft.Text("Hubo un error al eliminar")))
+        def cerrar_dialog(dialog):
+            dialog.open = False
+            page.update()
+            
+        def mostrar_unidades(c,color):
+            unidades = unidades_controller.obtener_unidades(c["id_clase"])
+        
+            items = [
+                ft.ListTile(
+                    title=ft.Text(u["nombre"]),
+                    bgcolor=color,
+                    on_click=lambda e, c=c, u=u: actividad_click(c,u),
+                    leading=ft.Icon(ft.Icons.CHECK_CIRCLE_OUTLINE)
+                )
+                for u in unidades
+            ]
+        
+            dialog = ft.AlertDialog(
+                title=ft.Text(f"Unidades - {c['nombre']}"),
+                bgcolor=color,
+                
+                content=ft.Column(items, tight=True),
+                actions=[
+                    ft.TextButton("Cerrar", on_click=lambda e: cerrar_dialog(dialog))
+                ]
+            )
+        
+            page.overlay.append(dialog)
+            dialog.open = True
+            page.update()
+        
             
         colores_tarjetas = [
             "#84ABE0",
@@ -121,12 +165,23 @@ def ClasesView(page, clases_controller):
                                 content=ft.Column([
                                     ft.Row([
                                         ft.Text(c["nombre"], size=22, weight="bold", color="dark", expand=True),
-                                        ft.IconButton(
-                                            ft.Icons.DELETE,
-                                            tooltip="Eliminar clase",
-                                            on_click=lambda e, c=c: eliminar(c),
-                                            expand=True
+                                        ft.Column([
+                                        ft.PopupMenuButton(
+                                            items=[
+                                                ft.PopupMenuItem(
+                                                    content=ft.Text("Ver unidades"),
+                                                    on_click=lambda e, c=c, color=color: mostrar_unidades(c,color),
+                                                    expand=True
+                                                ),
+                                                ft.PopupMenuItem(
+                                                    content=ft.Text("Eliminar"),
+                                                    on_click=lambda e, c=c: eliminar(c),
+                                                    expand=True
+                                                ),
+                                            ]
                                         )
+                                    ], horizontal_alignment=ft.CrossAxisAlignment.END),
+                                        
                                     ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
                                     ft.Text(c["descripcion"], weight="bold", expand=True ,size=18, color="dark"),
                                 ], alignment=ft.MainAxisAlignment.START)
