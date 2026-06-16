@@ -11,5 +11,6 @@ class Database:
             host="localhost",
             user="root",
             password="",
-            database="classflow"
+            database="classflow",
+            use_pure=True
         )

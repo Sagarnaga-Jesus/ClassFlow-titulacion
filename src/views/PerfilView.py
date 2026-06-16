@@ -24,7 +24,6 @@ def PerfilView(page):
             color="white",
 
             actions=[
-                ft.IconButton(ft.Icons.CLEAR_ALL,on_click=lambda _: page.go(f"/unidades/{clase.get('id_clase', '')}"),tooltip="Volver a unidades", icon_size=30),
                 ft.IconButton(ft.Icons.WEB_STORIES,on_click=lambda _: page.go("/clases"),tooltip="Volver a clases", icon_size=30),
             ]
         ),

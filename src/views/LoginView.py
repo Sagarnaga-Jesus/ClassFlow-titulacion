@@ -1,7 +1,16 @@
 import flet as ft
+import os
+import sys
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 import requests
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 def LoginView(page: ft.Page, auth_controller):
@@ -9,7 +18,9 @@ def LoginView(page: ft.Page, auth_controller):
     
     def login_google():
         flow = InstalledAppFlow.from_client_secrets_file(
-            "src/client_secret_936016113208-e3k9m1dpclpiq3kndf4h92d31a78r9uk.apps.googleusercontent.com.json",
+            resource_path(
+                "src/client_secret_936016113208-e3k9m1dpclpiq3kndf4h92d31a78r9uk.apps.googleusercontent.com.json"
+                ),
             scopes=[
                 "openid",
                 "https://www.googleapis.com/auth/userinfo.email",
@@ -90,7 +101,7 @@ def LoginView(page: ft.Page, auth_controller):
             color="white",
         ),
         controls=[
-            ft.Image(src="src/image/Logo.png",width=350,height=300,),
+            ft.Image(resource_path("src/image/Logo.png"),width=350,height=300,),
             ft.Card(
                 shadow_color=ft.Colors.BLUE_900,
                 elevation=24,
